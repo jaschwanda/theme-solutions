@@ -109,9 +109,9 @@ class USI_Theme_Solutions {
    function action_after_setup_theme() {
       if (is_admin()) {
          $template_directory = get_template_directory();
-         require($template_directory . '/inc/usi-theme-solutions-activate.php');
-         require($template_directory . '/inc/usi-theme-solutions-custimizer.php');
-         require($template_directory . '/inc/usi-theme-solutions-settings.php');
+         require($template_directory . '/usi-theme-solutions-activate.php');
+         require($template_directory . '/usi-theme-solutions-custimizer.php');
+         require($template_directory . '/usi-theme-solutions-settings.php');
          new USI_Theme_Solutions_Activate();
          new USI_Theme_Solutions_Customizer();
          new USI_Theme_Solutions_Settings(self::$option_name, self::$options);

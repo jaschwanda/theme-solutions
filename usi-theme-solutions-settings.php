@@ -4,7 +4,7 @@
 
 class USI_Theme_Solutions_Settings {
 
-   const VERSION = '1.0.13 (2017-08-29)';
+   const VERSION = '1.1.1 (2019-04-11)';
 
    var $indent = '      ';
    var $options = null;
