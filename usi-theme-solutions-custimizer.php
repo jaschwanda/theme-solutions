@@ -2,7 +2,7 @@
 
 class USI_Theme_Solutions_Customizer {
 
-   const VERSION = '1.0.7 (2016-10-20)';
+   const VERSION = '1.1.1 (2019-04-11)';
 
    function __construct() {
       add_action('customize_register', array($this, 'setup'), 30);

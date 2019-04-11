@@ -2,7 +2,7 @@
 
 class USI_Theme_Solutions_Activate {
 
-   const VERSION = '1.0.7 (2016-10-20)';
+   const VERSION = '1.1.1 (2019-04-11)';
 
    function __construct() {
       add_action('after_switch_theme', array($this, 'activate'));

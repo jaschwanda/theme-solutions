@@ -4,7 +4,7 @@
  *
  * @package WordPress
  * @subpackage Theme-Solutions
- * @since Theme-Solutions 1.0.15 (2017-08-29)
+ * @since Theme-Solutions 1.1.1 (2019-04-11)
  *
  **/
 
@@ -19,7 +19,7 @@
 
 class USI_Theme_Solutions {
 
-   const VERSION = '1.0.15 (2017-08-29)';
+   const VERSION = '1.1.1 (2019-04-11)';
    const TEXTDOMAIN = 'usi-theme-solutions';
 
    static $home_url = null;
