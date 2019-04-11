@@ -1,4 +1,4 @@
-# Variable-Solutions #
+# Theme-Solutions #
 
 The Universal Solutions theme framework.
 
