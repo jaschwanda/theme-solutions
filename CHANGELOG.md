@@ -4,6 +4,7 @@ Theme-Solutions theme framework changes are logged here using <a href="http://se
 
 
 ## 1.1.1 (2019-04-11) ##
+* Added remove 'Gutenberg CSS' option.
 * Updated all version numbers to be the same.
 
 ## 1.0.15 (2017-08-29) ##
