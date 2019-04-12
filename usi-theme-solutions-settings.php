@@ -280,8 +280,10 @@ add_action( 'wp_head', '_custom_logo_header_styles' );
          'index_rel_link',
          'print_emoji_detection_script',     // 7;
          'print_emoji_styles',
-         'remove_recent_comments_style',
          'rel_canonical',
+         'rel_canonical',
+         'remove_gutenberg_css',
+         'remove_recent_comments_style',
          'rest_output_link_wp_head',         // 10,0;
          'rsd_link',
          'start_post_rel_link',
@@ -696,10 +698,6 @@ add_action( 'wp_head', '_custom_logo_header_styles' );
          define('DISALLOW_FILE_EDIT', isset($options['disable-editor']) ? true : false);
          add_filter('wp_prepare_themes_for_js', array($this, 'filter_themes'));
       }
-      //add_filter('custom_menu_order', '__return_true'); 
-      //add_filter('custom_menu_order', array($this, 'filter_custom_menu_order'));
-      //add_filter('menu_order', array($this, 'filter_menu_order'));
-      //add_action('admin_menu', array($this, 'filter_admin_menu'));
    } // add_filters();
 
    function fields_render($args){
@@ -816,24 +814,6 @@ add_action( 'wp_head', '_custom_logo_header_styles' );
    function filter_generator_version() {
       return('');
    } // filter_generator_version();
-
-   function filter_admin_menu() {
-    global $menu;
-    global $submenu;
-    usi_log('filter_admin_menu:menu=' . print_r($menu, true) . ' submenu=' . print_r($submenu, true));
-   } // filter_menu_order();
-   function filter_custom_menu_order($menu_ord) {
-     global $menu;
-     global $submenu;
-     usi_log('filter_custom_menu_order:menu=' . print_r($menu, true) . ' submenu=' . print_r($submenu, true) . ' arg=' . print_r($menu_ord, true));
-     return($menu_ord);
-   } // filter_menu_order();
-   function filter_menu_order($menu_ord) {
-    global $menu;
-    global $submenu;
-    usi_log('filter_menu_order:menu=' . print_r($menu, true) . ' submenu=' . print_r($submenu, true) . ' arg=' . print_r($menu_ord, true));
-   return($menu_ord);
-   } // filter_menu_order();
    
    function filter_themes($themes) {
       unset($themes['usi-theme-solutions']);
@@ -901,6 +881,12 @@ add_action( 'wp_head', '_custom_logo_header_styles' );
    } // settings_page();
 
 } // Class USI_Theme_Solutions_Settings;
+
+function wpassist_remove_block_library_css(){
+wp_deregister_script('wp-block-library');
+    wp_dequeue_style( 'wp-block-library' );
+} 
+add_action( 'wp_enqueue_scripts', 'wpassist_remove_block_library_css' );
 
 if (!function_exists('usi_log')) {
    function usi_log($action) {

@@ -8,13 +8,10 @@
  *
  **/
 
-// Add pingaback <link rel="pingback" href="< ? php bloginfo( 'pingback_url' ); ? >">
-
 // https://developer.wordpress.org/plugins/internationalization/how-to-internationalize-your-plugin/
 // https://developer.wordpress.org/themes/basics/theme-functions/
 // http://justintadlock.com/archives/2010/11/08/sidebars-in-wordpress
 // http://wordpress.stackexchange.com/questions/26557/programmatically-add-widgets-to-sidebars/51086#51086
-// http://code.tutsplus.com/tutorials/loading-css-into-wordpress-the-right-way--cms-20402   
 // http://code.tutsplus.com/articles/customizing-your-wordpress-admin--wp-24941
 
 class USI_Theme_Solutions {
@@ -159,8 +156,14 @@ class USI_Theme_Solutions {
       // echo "    <style>\n      /* theme customizer .jim2{color:red;} */\n    </style>\n";
    } // action_wp_head_inline_style();
 
+   function action_wp_print_styles() {
+       wp_dequeue_style( 'wp-block-library' );
+   } // action_wp_print_styles();
+
    function add_actions() {
-      if (!empty(self::$options['miscellaneous']['log_plugin_install_errors'])) add_action('activated_plugin', array($this, 'action_activated_plugin'));
+      if (!empty(self::$options['miscellaneous']['log_plugin_install_errors'])) {
+         add_action('activated_plugin', array($this, 'action_activated_plugin'));
+      }
       add_action('after_setup_theme', array($this, 'action_after_setup_theme'));
       add_action('widgets_init', array($this, 'action_widgets_init'), 10);
       add_action('wp_enqueue_scripts', array($this, 'action_wp_enqueue_scripts'), 20);
@@ -168,6 +171,9 @@ class USI_Theme_Solutions {
       add_action('wp_head', array($this, 'action_meta_tags'), 8.5);
       add_action('wp_head', array($this, 'action_wp_head_inline_style'), 30);
       add_action('wp_footer', array($this, 'action_wp_footer'), 20);
+      if (!empty(self::$options['wp_head']['remove_gutenberg_css'])) {
+         add_action('wp_print_styles', array($this, 'action_wp_print_styles'), 100);
+      }
    } // add_actions();
 
    function add_filters() {
@@ -314,9 +320,8 @@ function usi_add_theme_editor_capabilities() {
 add_action('admin_init', 'usi_add_theme_editor_capabilities');
 
 // http://wordpress.stackexchange.com/questions/42036/changing-wp-admin-widgets-php
-//add_action( 'widgets_admin_page', 'show_widget_preview' );
-function show_widget_preview()
-{
+add_action( 'widgets_admin_page', 'show_widget_preview' );
+function show_widget_preview() {
     $preview_widgets = $GLOBALS['wp_registered_sidebars'];
     unset ( $preview_widgets['wp_inactive_widgets'] );
 
