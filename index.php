@@ -6,11 +6,7 @@ get_template_part('head');
 
 echo PHP_EOL, '  <body>', PHP_EOL;
 
-global $post;
-
-if ($post) $options_usi_ts_page = get_post_meta($post->ID, '_usi-ts-page', true);
-
-$template_name = !empty($options_usi_ts_page['template']) ? $options_usi_ts_page['template'] : 'default';
+$template_name = !empty(USI_Theme_Solutions::$options_post['template']) ? USI_Theme_Solutions::$options_post['template'] : 'default';
 
 if (!empty(USI_Theme_Solutions::$options['templates'][$template_name])) {
 
