@@ -59,6 +59,12 @@ class USI_Theme_Solutions {
    function action_activated_plugin() {
       usi_log('plugin_install_errors=' . ob_get_contents());
    } // action_activated_plugin();
+   
+   function action_after_setup_theme() {
+      if (is_admin()) {
+         require(get_template_directory() . '/usi-theme-solutions-settings.php');
+      } // ENDIF is_admin();
+   } // action_after_setup_theme();
 
    function action_wp_enqueue_scripts() {
       if (isset(self::$options['styles'])) {
@@ -112,19 +118,6 @@ class USI_Theme_Solutions {
          }
       }
    } // action_wp_enqueue_scripts();
-   
-   function action_after_setup_theme() {
-      if (is_admin()) {
-         $template_directory = get_template_directory();
-         require($template_directory . '/usi-theme-solutions-activate.php');
-         require($template_directory . '/usi-theme-solutions-custimizer.php');
-         require($template_directory . '/usi-theme-solutions-settings.php');
-         require($template_directory . '/usi-theme-solutions-settings-settings.php');
-         new USI_Theme_Solutions_Activate();
-         new USI_Theme_Solutions_Customizer();
-         new USI_Theme_Solutions_Settings();
-      } // ENDIF is_admin();
-   } // action_after_setup_theme();
 
    function action_meta_tags() {
 
@@ -191,28 +184,27 @@ class USI_Theme_Solutions {
    } // add_actions();
 
    function add_filters() {
+
+      $updates = !empty(self::$options['updates']) ? self::$options['updates'] : array();
+      if (!empty($updates['automatic_updater_disabled'])) {
+         add_filter('automatic_updater_disabled', '__return_true');
+      } else {
+         if (!empty($updates['auto_update_core'])) {
+            add_filter('auto_update_core', '__return_true');
+         } else {
+            add_filter('allow_major_auto_core_updates', '__return_' . (!empty($updates['allow_major_auto_core_updates']) ? 'true' : 'false'));
+            add_filter('allow_minor_auto_core_updates', '__return_' . (!empty($updates['allow_minor_auto_core_updates']) ? 'true' : 'false'));
+            add_filter('allow_dev_auto_core_updates',   '__return_' . (!empty($updates['allow_dev_auto_core_updates'])   ? 'true' : 'false'));
+         }
+         add_filter('auto_update_plugin',      '__return_' . (!empty($updates['auto_update_plugin'])      ? 'true' : 'false'));
+         add_filter('auto_update_theme',       '__return_' . (!empty($updates['auto_update_theme'])       ? 'true' : 'false'));
+         add_filter('auto_update_translation', '__return_' . (!empty($updates['auto_update_translation']) ? 'true' : 'false'));
+      }
+
       add_filter('script_loader_tag', array($this, 'filter_script_loader_tag'), 10, 3);
       add_filter('site_icon_meta_tags', array($this, 'filter_site_icon_meta_tags'));
       add_filter('style_loader_tag', array($this, 'filter_style_loader_tag'), 10, 4);
-      add_filter('wp_resource_hints', array($this, 'filter_wp_resource_hints'), 10, 2);
-      if (isset(self::$options['updates'])) {
-         $options = self::$options['updates'];
-         add_filter('automatic_updater_disabled', '__return_' . (!empty($options['automatic_updater_disabled']) ? 'true' : 'false'));
-/*
-         add_filter('auto_update_core', '__return_' . (!empty($options['auto_update_core']) ? 'true' : 'false'));
-         add_filter('allow_dev_auto_core_updates', '__return_' . (!empty($options['allow_dev_auto_core_updates']) ? 'true' : 'false'));
-         add_filter('allow_minor_auto_core_updates', '__return_' . (!empty($options['allow_minor_auto_core_updates']) ? 'true' : 'false'));
-         add_filter('allow_major_auto_core_updates', '__return_' . (!empty($options['allow_major_auto_core_updates']) ? 'true' : 'false'));
-         add_filter('auto_update_plugin', '__return_' . (!empty($options['auto_update_plugin']) ? 'true' : 'false'));
-         add_filter('auto_update_theme', '__return_' . (!empty($options['auto_update_theme']) ? 'true' : 'false'));
-*/
-      }
    } // add_filters();
-
-   function filter_wp_resource_hints($urls, $relation_type) {
-      return(array());
-      return($urls);
-   } // filter_wp_resource_hints();
 
    function add_shortcodes() {
       add_shortcode('cloak', array($this, 'shortcode_email'));
@@ -331,17 +323,6 @@ function usi_add_theme_editor_capabilities() {
 } // usi_add_theme_editor_capabilities();
 
 add_action('admin_init', 'usi_add_theme_editor_capabilities');
-
-// http://wordpress.stackexchange.com/questions/42036/changing-wp-admin-widgets-php
-add_action( 'widgets_admin_page', 'show_widget_preview' );
-function show_widget_preview() {
-    $preview_widgets = $GLOBALS['wp_registered_sidebars'];
-    unset ( $preview_widgets['wp_inactive_widgets'] );
-
-    print '<div style="border:2px solid #ddf;padding:20px">'
-    . '<pre>' . 'Custom stuff here'. htmlspecialchars( print_r( $preview_widgets, TRUE ) ) . '</pre>'
-    . '</div>';
-}
 
 function widget($atts) {
     

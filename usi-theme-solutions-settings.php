@@ -125,6 +125,25 @@ class USI_Theme_Solutions_Settings extends USI_WordPress_Solutions_Settings {
       return($input);
    } // fields_sanitize_section();
 
+   function fields_sanitize_updates($input) {
+      if (!empty($input['updates']['automatic_updater_disabled'])) {
+         $input['updates']['auto_update_core']              = 
+         $input['updates']['allow_dev_auto_core_updates']   = 
+         $input['updates']['allow_major_auto_core_updates'] = 
+         $input['updates']['allow_minor_auto_core_updates'] = 
+         $input['updates']['auto_update_plugin']            = 
+         $input['updates']['auto_update_theme']             = 
+         $input['updates']['auto_update_translation']       = false;
+      } else {
+         if (!empty($input['updates']['auto_update_core'])) {
+            $input['updates']['allow_major_auto_core_updates'] =
+            $input['updates']['allow_minor_auto_core_updates'] =
+            $input['updates']['allow_dev_auto_core_updates']   = false;
+         }
+      }
+      return($input);
+   } // fields_sanitize_updates();
+
    function filter_admin_bar_menu($wp_admin_bar) {
       $role = $this->get_user_role();
       $my_account = $wp_admin_bar->get_node('my-account');
@@ -162,9 +181,10 @@ class USI_Theme_Solutions_Settings extends USI_WordPress_Solutions_Settings {
    } // get_user_role();
 
    function remove_filters(){
-      if (isset($options['remove_the_content_wpautop'])) remove_filter('the_content', 'wpautop');
-      if (isset($options['remove_the_content_wptexturize'])) remove_filter('the_content', 'wptexturize');
-      if (isset($options['remove_the_excerpt_wpautop'])) remove_filter('the_excerpt', 'wpautop');
+      $options = $this->options['editor'];
+      if (!empty($options['remove_the_content_wpautop']))     remove_filter('the_content', 'wpautop');
+      if (!empty($options['remove_the_content_wptexturize'])) remove_filter('the_content', 'wptexturize');
+      if (!empty($options['remove_the_excerpt_wpautop']))     remove_filter('the_excerpt', 'wpautop');
    } // remove_filters();
 
    function render_meta_box($post) {
@@ -329,19 +349,65 @@ class USI_Theme_Solutions_Settings extends USI_WordPress_Solutions_Settings {
          }
       }
 
+      $options  = !empty($this->options['updates']) ? $this->options['updates'] : array();
+      $notes = array(
+         'automatic_updater_disabled' => null,
+         'auto_update_core' => null,
+         'allow_dev_auto_core_updates' => null,
+         'allow_major_auto_core_updates' => null,
+         'allow_minor_auto_core_updates' => ' &nbsp; ' . __('WordPress Default', USI_Theme_Solutions::TEXTDOMAIN),
+         'auto_update_plugin' => ' &nbsp; ' . __('Applies only to plugins that support automatic updates', USI_Theme_Solutions::TEXTDOMAIN),
+         'auto_update_theme' => ' &nbsp; ' . __('Applies only to themes that support automatic updates', USI_Theme_Solutions::TEXTDOMAIN),
+         'auto_update_translation' => ' &nbsp; ' . __('WordPress Default', USI_Theme_Solutions::TEXTDOMAIN),
+      );
+      $readonly = array(
+         'automatic_updater_disabled' => false,
+         'auto_update_core' => true,
+         'allow_dev_auto_core_updates' => true,
+         'allow_major_auto_core_updates' => true,
+         'allow_minor_auto_core_updates' => true,
+         'auto_update_plugin' => true,
+         'auto_update_theme' => true,
+         'auto_update_translation' => true,
+      );
+      if (empty($options['automatic_updater_disabled'])) {
+         $readonly['auto_update_core']   =
+         $readonly['auto_update_plugin'] =
+         $readonly['auto_update_theme']  = 
+         $readonly['auto_update_translation']  = false;
+         if (empty($options['auto_update_core'])) {
+            $readonly['allow_major_auto_core_updates'] =
+            $readonly['allow_minor_auto_core_updates'] =
+            $readonly['allow_dev_auto_core_updates']   = false;
+         }
+      }
       $updates = array(
-         'automatic_updater_disabled',
-/*       'auto_update_core',
-         'allow_dev_auto_core_updates',
-         'allow_minor_auto_core_updates',
-         'allow_major_auto_core_updates',
-         'auto_update_plugin',
-         'auto_update_theme', */
+         'automatic_updater_disabled' => __('Disable All Updates', USI_Theme_Solutions::TEXTDOMAIN),
+         'auto_update_core' => __('Enable All Core Updates', USI_Theme_Solutions::TEXTDOMAIN),
+         'allow_dev_auto_core_updates' => __('Enable Development Updates', USI_Theme_Solutions::TEXTDOMAIN),
+         'allow_major_auto_core_updates' => __('Enable Major Updates', USI_Theme_Solutions::TEXTDOMAIN),
+         'allow_minor_auto_core_updates' => __('Enable Minor Updates', USI_Theme_Solutions::TEXTDOMAIN),
+         'auto_update_plugin' => __('Enable Plugin Updates', USI_Theme_Solutions::TEXTDOMAIN),
+         'auto_update_theme' => __('Enable Theme Updates', USI_Theme_Solutions::TEXTDOMAIN),
+         'auto_update_translation' => __('Enable Translation Updates', USI_Theme_Solutions::TEXTDOMAIN),
       );
       $updates_settings = array();
-      for ($ith = 0; $ith < count($updates); $ith++) {
-         $id = $updates[$ith];   
-         $updates_settings[$id] = array('type' => 'checkbox', 'label' => $id);
+      $indent = '<span style="display:inline-block; width:16px;"></span>';
+      $index  = 0;
+      foreach ($updates as $update_id => $update_label) {
+         switch ($index++) {
+         case 0: $prefix = ''; break;
+         case 1:
+         case 5: $prefix = $indent; break;
+         case 2: $prefix = $indent . $indent; break;
+         }
+         $updates_settings[$update_id] = array(
+            'type' => 'checkbox', 
+            'label' => $update_label, 
+            'notes' => $notes[$update_id], 
+            'prefix' => $prefix, 
+            'readonly' => $readonly[$update_id],
+         );
       }
 
       $widget_areas = isset($this->options['widget_areas']) ? $this->options['widget_areas'] : array();
@@ -563,7 +629,8 @@ class USI_Theme_Solutions_Settings extends USI_WordPress_Solutions_Settings {
          ), // trim_urls;
 
          'updates' => array(
-            'label' => 'Updates',
+            'fields_sanitize' => array($this, 'fields_sanitize_updates'),
+            'label' => 'Automatic Updates',
             'settings' => $updates_settings,
          ), // updates;
 
@@ -588,5 +655,7 @@ class USI_Theme_Solutions_Settings extends USI_WordPress_Solutions_Settings {
    } // sections();
 
 } // Class USI_Theme_Solutions_Settings;
+
+new USI_Theme_Solutions_Settings();
 
 // --------------------------------------------------------------------------------------------------------------------------- // ?>
