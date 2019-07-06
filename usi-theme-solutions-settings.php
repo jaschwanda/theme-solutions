@@ -2,8 +2,23 @@
 
 defined('ABSPATH') or die('Accesss not allowed.');
 
-require_once('D:/Users/JAS/My Web Sites/Clients/www.KA-Lehigh.org/public_html/secret/temple/wp-content/plugins/usi-wordpress-solutions/usi-wordpress-solutions-settings.php');
-require_once('D:/Users/JAS/My Web Sites/Clients/www.KA-Lehigh.org/public_html/secret/temple/wp-content/plugins/usi-wordpress-solutions/usi-wordpress-solutions-versions.php');
+define('USI_THEME_SOLUTIONS_WORDPRESS_SETTINGS', WP_PLUGIN_DIR . '/usi-wordpress-solutions/usi-wordpress-solutions-settings.php');
+
+if (!file_exists(USI_THEME_SOLUTIONS_WORDPRESS_SETTINGS)) {
+
+   echo '<div class="notice notice-warning is-dismissible"><p>' . 
+      sprintf(
+         __('The %s plugin is required for the %s framework to run properly.', USI_Theme_Solutions::TEXTDOMAIN), 
+         '<b>WordPress-Solutions</b>',
+         '<b>Theme-Solutions</b>'
+      ) .
+      '</p></div>';
+
+   return; // Don't want to pocess the rest of the file;
+
+} 
+
+require_once(USI_THEME_SOLUTIONS_WORDPRESS_SETTINGS);
 
 class USI_Theme_Solutions_Settings extends USI_WordPress_Solutions_Settings {
 
@@ -53,6 +68,17 @@ class USI_Theme_Solutions_Settings extends USI_WordPress_Solutions_Settings {
       }
       parent::action_admin_init();
    } // action_admin_init();
+
+   function action_load_help_tab() {
+      $screen = get_current_screen();
+      $screen->add_help_tab(
+         array(
+           'id' => 'scripts',
+           'title' => __('Scripts, Styles, Templates, Trims and Widgetized Areas'),
+           'content' => '<p>' . __( 'The <b>Scripts</b>, <b>Styles</b>, <b>Templates</b>, <b>Trims</b> and <b>Widgetized Areas</b> sections use spaces to seperate the input into individual strings. If you need to use a space in a string then you should include an underscore <b>"_"</b> as the space. If you need to use an underscore in a string then you should include a double underscore <b>"__"</b> as the single underscore.' ) . '</p>',
+         ) 
+      );
+   } // action_load_help_tab();
 
    function action_save_post($page_id) {
       if (!current_user_can('edit_page', $page_id)) {      
@@ -419,7 +445,7 @@ class USI_Theme_Solutions_Settings extends USI_WordPress_Solutions_Settings {
          $widget_areas_settings[$id] = array('class' => 'large-text', 'type' => 'text', 'label' => $id);
          if ('new_widget_areas' == $id) {
             $widget_areas_settings[$id]['label'] = __('Add Widgetized Area', USI_Theme_Solutions::TEXTDOMAIN);
-            $widget_areas_settings[$id]['notes'] = '<i>unique-id &nbsp; name &nbsp; description &nbsp; before_widget_html &nbsp; after_widget_html &nbsp; before_title_html &nbsp; after_title_html</i><br/>(User an underscore <b>"_"</b> to include a space and a double underscore <b>"__"</b> to include a single underscore in the above strings)';
+            $widget_areas_settings[$id]['notes'] = '<i>unique-id &nbsp; name &nbsp; description &nbsp; before_widget_html &nbsp; after_widget_html &nbsp; before_title_html &nbsp; after_title_html</i>';
          }
       }
 
@@ -490,19 +516,19 @@ class USI_Theme_Solutions_Settings extends USI_WordPress_Solutions_Settings {
                      array(
                         'value' => 'none', 
                         'label' => true, 
-                        'notes' => __('Do Not Load', USI_Variable_Solutions::TEXTDOMAIN), 
+                        'notes' => __('Do Not Load', USI_Theme_Solutions::TEXTDOMAIN), 
                         'suffix' => ' &nbsp; &nbsp; &nbsp; ',
                      ),
                      array(
                         'value' => 'header', 
                         'label' => true, 
-                        'notes' => __('In Header', USI_Variable_Solutions::TEXTDOMAIN), 
+                        'notes' => __('In Header', USI_Theme_Solutions::TEXTDOMAIN), 
                         'suffix' => ' &nbsp; &nbsp; &nbsp; ',
                      ),
                      array(
                         'value' => 'footer', 
                         'label' => true, 
-                        'notes' => __('In Footer', USI_Variable_Solutions::TEXTDOMAIN), 
+                        'notes' => __('In Footer', USI_Theme_Solutions::TEXTDOMAIN), 
                      ),
                   ),
                ), // load;
@@ -513,13 +539,13 @@ class USI_Theme_Solutions_Settings extends USI_WordPress_Solutions_Settings {
                      array(
                         'value' => 'google', 
                         'label' => true, 
-                        'notes' => __('Google', USI_Variable_Solutions::TEXTDOMAIN), 
+                        'notes' => __('Google', USI_Theme_Solutions::TEXTDOMAIN), 
                         'suffix' => ' &nbsp; &nbsp; &nbsp; ',
                      ),
                      array(
                         'value' => 'wordpress', 
                         'label' => true, 
-                        'notes' => __('WordPress', USI_Variable_Solutions::TEXTDOMAIN), 
+                        'notes' => __('WordPress', USI_Theme_Solutions::TEXTDOMAIN), 
                      ),
                   ),
                ), // source;
