@@ -22,7 +22,7 @@ require_once(USI_THEME_SOLUTIONS_WORDPRESS_SETTINGS);
 
 class USI_Theme_Solutions_Settings extends USI_WordPress_Solutions_Settings {
 
-   const VERSION = '1.0.8 (2018-01-10)';
+   const VERSION = '1.2.1 (2019-07-07)';
 
    function __construct() {
 
@@ -305,7 +305,7 @@ class USI_Theme_Solutions_Settings extends USI_WordPress_Solutions_Settings {
          $tokens = explode(' ', $script_value);
          $id     = $tokens[0];
          $scripts_settings[$id] = array('class' => 'large-text', 'type' => 'text', 'label' => $id);
-         if ('new_script' == $id) {
+         if ('new_scripts' == $id) {
             $scripts_settings[$id]['label'] = __('Add Script', USI_Theme_Solutions::TEXTDOMAIN);
             $scripts_settings[$id]['notes'] = '<i>unique-id &nbsp; script/path/name &nbsp; version &nbsp; footer</i>';
          }
@@ -436,6 +436,39 @@ class USI_Theme_Solutions_Settings extends USI_WordPress_Solutions_Settings {
          );
       }
 
+      $versions_settings = array(
+         'version-wordpress' => array(
+            'type' => 'html', 
+            'label' => 'WordPress',
+            'html' =>  get_bloginfo('version'),
+         ), // version-wordpress;
+         'version-parent' => array(
+            'type' => 'html', 
+            'label' => USI_Theme_Solutions::NAME,
+            'html' => USI_WordPress_Solutions_Versions::link(
+               USI_Theme_Solutions::VERSION, 
+               USI_Theme_Solutions::NAME, 
+               USI_Theme_Solutions::VERSION, 
+               USI_Theme_Solutions::TEXTDOMAIN, 
+               __DIR__ // Folder containing plugin or theme;
+            ),
+         ), // version-parent;
+      );
+      $theme = wp_get_theme();
+      if (USI_Theme_Solutions::NAME != $theme->Name) {
+         $versions_settings['version-child'] = array(
+            'type' => 'html', 
+            'label' => $theme->Name,
+            'html' => USI_WordPress_Solutions_Versions::link(
+               $theme->Version, 
+               $theme->Name,
+               $theme->Version, 
+               USI_Theme_Solutions::TEXTDOMAIN, 
+               get_stylesheet_directory() // Folder containing plugin or theme;
+            ),
+         );
+      }
+
       $widget_areas = isset($this->options['widget_areas']) ? $this->options['widget_areas'] : array();
       $widget_areas['new_widget_areas'] = 'new_widget_areas';
       $widget_areas_settings = array();
@@ -452,7 +485,7 @@ class USI_Theme_Solutions_Settings extends USI_WordPress_Solutions_Settings {
       $sections = array(
 
          'admin' => array(
-            'label' => 'Administrator Pages',
+            'label' => __('Administrator Pages', USI_Theme_Solutions::TEXTDOMAIN),
             'settings' => array(
                'admin_bar_menu' => array(
                   'class' => 'large-text', 
@@ -471,32 +504,32 @@ class USI_Theme_Solutions_Settings extends USI_WordPress_Solutions_Settings {
                ),
                'disable-editor' => array(
                   'type' => 'checkbox', 
-                  'label' => 'Disable File Editor',
-                  'notes' => 'Disables the plugin and theme code editor.',
+                  'label' => __('Disable File Editor', USI_Theme_Solutions::TEXTDOMAIN),
+                  'notes' => 'Disables the plugin and theme code editor (recommended).',
                ),
             ),
          ), // admin;
 
          'editor' => array(
-            'label' => 'Editor Functions',
+            'label' => __('Editor Functions', USI_Theme_Solutions::TEXTDOMAIN),
             'settings' => array(
                'remove the_content wptexturize' => array(
                   'type' => 'checkbox', 
-                  'label' => 'remove&nbsp;the_content&nbsp;wptexturize',
+                  'label' => __('remove&nbsp;the_content&nbsp;wptexturize', USI_Theme_Solutions::TEXTDOMAIN),
                ),
                'remove the_content wpautop' => array(
                   'type' => 'checkbox', 
-                  'label' => 'remove the_content wpautop',
+                  'label' => __('remove the_content wpautop', USI_Theme_Solutions::TEXTDOMAIN),
                ),
                'remove the_excerpt wpautop' => array(
                   'type' => 'checkbox', 
-                  'label' => 'remove the_excerpt wpautop',
+                  'label' => __('remove the_excerpt wpautop', USI_Theme_Solutions::TEXTDOMAIN),
                ),
             ),
          ), // editor;
 
          'header' => array(
-            'label' => 'Header Functions',
+            'label' => __('Header Functions', USI_Theme_Solutions::TEXTDOMAIN),
             'settings' => array(
                'base_url' => array(
                   'type' => 'checkbox', 
@@ -507,7 +540,7 @@ class USI_Theme_Solutions_Settings extends USI_WordPress_Solutions_Settings {
 
          'jquery' => array(
             'footer_callback' => array($this, 'config_section_footer'),
-            'label' => 'jQuery Libraries',
+            'label' => __('jQuery Libraries', USI_Theme_Solutions::TEXTDOMAIN),
             'settings' => array(
                'load' => array(
                   'type' => 'radio', 
@@ -534,7 +567,7 @@ class USI_Theme_Solutions_Settings extends USI_WordPress_Solutions_Settings {
                ), // load;
                'source' => array(
                   'type' => 'radio', 
-                  'label' => 'Source',
+                  'label' => __('Source', USI_Theme_Solutions::TEXTDOMAIN),
                   'choices' => array(
                      array(
                         'value' => 'google', 
@@ -559,7 +592,7 @@ class USI_Theme_Solutions_Settings extends USI_WordPress_Solutions_Settings {
          ), // jquery;
 
          'meta_tags' => array(
-            'label' => 'Administrator Pages',
+            'label' => __('Administrator Pages', USI_Theme_Solutions::TEXTDOMAIN),
             'settings' => array(
                'copyright' => array(
                   'class' => 'large-text', 
@@ -585,22 +618,23 @@ class USI_Theme_Solutions_Settings extends USI_WordPress_Solutions_Settings {
          ), // meta_tags;
 
          'miscellaneous' => array(
-            'label' => 'Miscellaneous',
+            'label' => __('Miscellaneous', USI_Theme_Solutions::TEXTDOMAIN),
             'settings' => array(
                'log_plugin_install_errors' => array(
                   'type' => 'checkbox', 
                   'label' => 'log_plugin_install_errors',
+                  'notes' => 'Only receommended when installing or testing new plugins.',
                ),
             ),
          ), // miscellaneous;
 
          'wp_head' => array(
-            'label' => 'Remove wp_head() Items',
+            'label' => __('Remove wp_head() Items', USI_Theme_Solutions::TEXTDOMAIN),
             'settings' => $wp_header_settings,
          ), // wp_head;
 
          'widgets' => array(
-            'label' => 'Remove Unused Default Widgets',
+            'label' => __('Remove Unused Default Widgets', USI_Theme_Solutions::TEXTDOMAIN),
             'settings' => $widgets_settings,
          ), // widgets;
 
@@ -608,10 +642,10 @@ class USI_Theme_Solutions_Settings extends USI_WordPress_Solutions_Settings {
             'fields_sanitize' => $fields_sanitize_section,
             'label' => 'Scripts',
             'settings' => $scripts_settings,
-         ), // widgets;
+         ), // scripts;
 
          'search' => array(
-            'label' => 'Search Engine Tools',
+            'label' => __('Search Engine Tools', USI_Theme_Solutions::TEXTDOMAIN),
             'settings' => array(
                'google_analytics' => array(
                   'class' => 'large-text', 
@@ -627,42 +661,47 @@ class USI_Theme_Solutions_Settings extends USI_WordPress_Solutions_Settings {
          ), // search;
 
          'social' => array(
-            'label' => 'Social Media Links',
+            'label' => __('Social Media Links', USI_Theme_Solutions::TEXTDOMAIN),
             'settings' => $social_media_settings,
          ), // social;
 
          'styles' => array(
             'fields_sanitize' => $fields_sanitize_section,
-            'label' => 'Styles',
+            'label' => __('Styles', USI_Theme_Solutions::TEXTDOMAIN),
             'settings' => $styles_settings,
          ), // widgets;
 
          'templates' => array(
             'fields_sanitize' => $fields_sanitize_section,
-            'label' => 'Templates',
+            'label' => __('Templates', USI_Theme_Solutions::TEXTDOMAIN),
             'settings' => $templates_settings,
          ), // widgets;
 
          'support' => array(
-            'label' => 'Theme Support',
+            'label' => __('Theme Support', USI_Theme_Solutions::TEXTDOMAIN),
             'settings' => $support_settings,
          ), // support;
 
          'trim_urls' => array(
             'fields_sanitize' => $fields_sanitize_section,
-            'label' => 'Trim URLs',
+            'label' => __('Trim URLs', USI_Theme_Solutions::TEXTDOMAIN),
             'settings' => $trim_urls_settings,
          ), // trim_urls;
 
          'updates' => array(
             'fields_sanitize' => array($this, 'fields_sanitize_updates'),
-            'label' => 'Automatic Updates',
+            'label' => __('Update Options', USI_Theme_Solutions::TEXTDOMAIN),
             'settings' => $updates_settings,
          ), // updates;
 
+         'versions' => array(
+            'label' => __('Versions', USI_Theme_Solutions::TEXTDOMAIN),
+            'settings' => $versions_settings,
+         ), // versions;
+
          'widget_areas' => array(
             'fields_sanitize' => $fields_sanitize_section,
-            'label' => 'Widgetized Areas',
+            'label' => __('Widgetized Areas', USI_Theme_Solutions::TEXTDOMAIN),
             'settings' => $widget_areas_settings,
          ), // widget_areas;
 

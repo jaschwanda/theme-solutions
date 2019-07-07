@@ -4,7 +4,7 @@
  *
  * @package WordPress
  * @subpackage Theme-Solutions
- * @since Theme-Solutions 1.1.1 (2019-04-11)
+ * @since Theme-Solutions 1.2.1 (2019-07-07)
  *
  **/
 
@@ -16,7 +16,7 @@
 
 class USI_Theme_Solutions {
 
-   const VERSION = '1.1.1 (2019-04-11)';
+   const VERSION    = '1.2.1 (2019-07-07)';
    const NAME       = 'Theme-Solutions';
    const PREFIX     = 'usi-theme';
    const TEXTDOMAIN = 'usi-theme-solutions';
@@ -31,7 +31,13 @@ class USI_Theme_Solutions {
    
    function __construct() {
 
-      self::$options = get_option(self::$option_name);
+      $defaults['jquery']['load']   = 'none';
+      $defaults['jquery']['source'] = 'google';
+      $defaults['updates']['allow_minor_auto_core_updates'] =
+      $defaults['updates']['auto_update_translation']       = true;
+
+      self::$options  = get_option(self::$option_name, $defaults);
+
       self::$home_url = home_url('/');
       self::$site_url = site_url('/');
 
