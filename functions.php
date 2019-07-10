@@ -4,7 +4,7 @@
  *
  * @package WordPress
  * @subpackage Theme-Solutions
- * @since Theme-Solutions 1.2.1 (2019-07-07)
+ * @since Theme-Solutions 1.2.2 (2019-07-10)
  *
  **/
 
@@ -16,7 +16,7 @@
 
 class USI_Theme_Solutions {
 
-   const VERSION    = '1.2.1 (2019-07-07)';
+   const VERSION    = '1.2.2 (2019-07-10)';
    const NAME       = 'Theme-Solutions';
    const PREFIX     = 'usi-theme';
    const TEXTDOMAIN = 'usi-theme-solutions';
@@ -267,6 +267,7 @@ class USI_Theme_Solutions {
    } // loop();  
 
    function remove_actions() {
+usi_log(__METHOD__);
       remove_action('wp_head', 'wp_site_icon', 99);
       if (isset(self::$options['wp_head'])) {
          $options = self::$options['wp_head'];
@@ -290,6 +291,7 @@ class USI_Theme_Solutions {
          if (isset($options['wp_oembed_add_host_js'])) remove_action('wp_head', 'wp_oembed_add_host_js'); 
          if (isset($options['wp_print_head_scripts'])) remove_action('wp_head', 'wp_print_head_scripts');
          if (isset($options['wp_print_styles'])) remove_action('wp_head', 'wp_print_styles');
+         if (isset($options['wp_resource_hints'])) remove_action('wp_head', 'wp_resource_hints', 2);
          if (isset($options['wp_shortlink_wp_head'])) remove_action('wp_head', 'wp_shortlink_wp_head', 10, 0);
          
          if (isset($options['print_emoji_styles'])) remove_action('wp_print_styles', 'print_emoji_styles');

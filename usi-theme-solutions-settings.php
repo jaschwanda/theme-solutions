@@ -22,7 +22,7 @@ require_once(USI_THEME_SOLUTIONS_WORDPRESS_SETTINGS);
 
 class USI_Theme_Solutions_Settings extends USI_WordPress_Solutions_Settings {
 
-   const VERSION = '1.2.1 (2019-07-07)';
+   const VERSION = '1.2.2 (2019-07-10)';
 
    function __construct() {
 
@@ -268,6 +268,7 @@ class USI_Theme_Solutions_Settings extends USI_WordPress_Solutions_Settings {
          'wp_oembed_add_host_js',
          'wp_print_head_scripts',            // 9;
          'wp_print_styles',                  // 8;
+         'wp_resource_hints',                // 2;
          'wp_shortlink_wp_head',             // 10,0;
       // 'wp_site_icon',                     // 99;
       );
