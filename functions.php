@@ -267,7 +267,6 @@ class USI_Theme_Solutions {
    } // loop();  
 
    function remove_actions() {
-usi_log(__METHOD__);
       remove_action('wp_head', 'wp_site_icon', 99);
       if (isset(self::$options['wp_head'])) {
          $options = self::$options['wp_head'];
