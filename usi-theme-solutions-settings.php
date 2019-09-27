@@ -22,7 +22,7 @@ require_once(USI_THEME_SOLUTIONS_WORDPRESS_SETTINGS);
 
 class USI_Theme_Solutions_Settings extends USI_WordPress_Solutions_Settings {
 
-   const VERSION = '1.2.2 (2019-07-10)';
+   const VERSION = '1.2.3 (2019-09-26)';
 
    function __construct() {
 
@@ -203,7 +203,7 @@ class USI_Theme_Solutions_Settings extends USI_WordPress_Solutions_Settings {
 
    function get_user_role() {
       global $current_user;
-      return($current_user->roles[0]);
+      return(!empty($current_user->roles[0]) ? $current_user->roles[0] : 'unknown');
    } // get_user_role();
 
    function remove_filters(){
