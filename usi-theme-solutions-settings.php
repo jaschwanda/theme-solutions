@@ -22,7 +22,7 @@ require_once(USI_THEME_SOLUTIONS_WORDPRESS_SETTINGS);
 
 class USI_Theme_Solutions_Settings extends USI_WordPress_Solutions_Settings {
 
-   const VERSION = '1.2.3 (2019-09-26)';
+   const VERSION = '1.2.4 (2019-11-06)';
 
    function __construct() {
 
@@ -116,9 +116,15 @@ class USI_Theme_Solutions_Settings extends USI_WordPress_Solutions_Settings {
    } // action_widgets_init();
 
    function add_actions() {
+
       add_action('add_meta_boxes', array($this, 'action_add_meta_boxes'));
-      add_action('save_post', array($this, 'action_save_post'));
+
+      if (!empty($_REQUEST['page']) && (USI_Theme_Solutions::PREFIX . '-settings' == $_REQUEST['page'])) {
+         add_action('save_post', array($this, 'action_save_post'));
+      }
+
       add_action('widgets_init', array($this, 'action_widgets_init'));
+
    } // add_actions();
 
    function add_filters(){
@@ -207,10 +213,12 @@ class USI_Theme_Solutions_Settings extends USI_WordPress_Solutions_Settings {
    } // get_user_role();
 
    function remove_filters(){
-      $options = $this->options['editor'];
-      if (!empty($options['remove_the_content_wpautop']))     remove_filter('the_content', 'wpautop');
-      if (!empty($options['remove_the_content_wptexturize'])) remove_filter('the_content', 'wptexturize');
-      if (!empty($options['remove_the_excerpt_wpautop']))     remove_filter('the_excerpt', 'wpautop');
+      if (!empty($this->options['editor'])) {
+         $options = $this->options['editor'];
+         if (!empty($options['remove_the_content_wpautop']))     remove_filter('the_content', 'wpautop');
+         if (!empty($options['remove_the_content_wptexturize'])) remove_filter('the_content', 'wptexturize');
+         if (!empty($options['remove_the_excerpt_wpautop']))     remove_filter('the_excerpt', 'wpautop');
+      }
    } // remove_filters();
 
    function render_meta_box($post) {
@@ -624,7 +632,7 @@ class USI_Theme_Solutions_Settings extends USI_WordPress_Solutions_Settings {
                'log_plugin_install_errors' => array(
                   'type' => 'checkbox', 
                   'label' => 'log_plugin_install_errors',
-                  'notes' => 'Only receommended when installing or testing new plugins.',
+                  'notes' => 'Only recommended when installing or testing new plugins. &nbsp; <b>Note:</b> The plugin generated n characters of unexpected output error is often caused when the\'re extra characters before or after the </i>&lt;?php ?&gt;<i> tags or if the .php file is not saved as UTF without BOM.',
                ),
             ),
          ), // miscellaneous;
