@@ -4,7 +4,7 @@
  *
  * @package WordPress
  * @subpackage Theme-Solutions
- * @since Theme-Solutions 1.2.2 (2019-07-10)
+ * @since Theme-Solutions 1.3.1 (2019-11-28)
  *
  **/
 
@@ -16,7 +16,7 @@
 
 class USI_Theme_Solutions {
 
-   const VERSION    = '1.2.2 (2019-07-10)';
+   const VERSION    = '1.3.1 (2019-11-28)';
    const NAME       = 'Theme-Solutions';
    const PREFIX     = 'usi-theme';
    const TEXTDOMAIN = 'usi-theme-solutions';

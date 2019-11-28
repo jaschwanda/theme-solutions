@@ -2,6 +2,10 @@
 
 Theme-Solutions theme framework changes are logged here using <a href="http://semver.org/">Semantic Versioning</a>.
 
+## 1.3.1 (2019-11-28) ##
+* Added option to remove the 'site_icon_meta_tags' filter.
+* Updated all version numbers to be the same.
+
 ## 1.2.2 (2019-07-10) ##
 * Added option to remove the 'wp_resource_hints' filter.
 
