@@ -183,7 +183,6 @@ class USI_Theme_Solutions {
       add_action('after_setup_theme', array($this, 'action_after_setup_theme'));
       add_action('widgets_init', array($this, 'action_widgets_init'), 10);
       add_action('wp_enqueue_scripts', array($this, 'action_wp_enqueue_scripts'), 20);
-      add_action('wp_head', 'wp_site_icon', 8);
       add_action('wp_head', array($this, 'action_meta_tags'), 8.5);
       add_action('wp_head', array($this, 'action_wp_head_inline_style'), 30);
       add_action('wp_footer', array($this, 'action_wp_footer'), 20);
@@ -232,6 +231,7 @@ class USI_Theme_Solutions {
    } // filter_script_loader_tag();
 
    function filter_site_icon_meta_tags($meta_tags) {
+      if (isset(self::$options['site_icon_meta_tags'])) return(array());
       if (self::$trim_urls_source) {
          foreach ($meta_tags as $key => $value) {
             $meta_tags[$key] = '    ' . str_replace(self::$trim_urls_source, self::$trim_urls_target, $value);
@@ -267,7 +267,6 @@ class USI_Theme_Solutions {
    } // loop();  
 
    function remove_actions() {
-      remove_action('wp_head', 'wp_site_icon', 99);
       if (isset(self::$options['wp_head'])) {
          $options = self::$options['wp_head'];
          if (isset($options['adjacent_posts_rel_link'])) remove_action('wp_head', 'adjacent_posts_rel_link');
@@ -292,7 +291,7 @@ class USI_Theme_Solutions {
          if (isset($options['wp_print_styles'])) remove_action('wp_head', 'wp_print_styles');
          if (isset($options['wp_resource_hints'])) remove_action('wp_head', 'wp_resource_hints', 2);
          if (isset($options['wp_shortlink_wp_head'])) remove_action('wp_head', 'wp_shortlink_wp_head', 10, 0);
-         
+         if (isset($options['wp_site_icon'])) remove_action('wp_head', 'wp_site_icon', 99);
          if (isset($options['print_emoji_styles'])) remove_action('wp_print_styles', 'print_emoji_styles');
       }
    } // remove_actions();
@@ -363,5 +362,11 @@ function widget($atts) {
     return $output;
     
 }
-
+function removeAppleTouchIconFilter($string) {
+  return strpos($string, 'apple-touch-icon') === false;
+}
+function prevent_apple_touch_icon_metatag($meta_tags){
+//   return(array());
+    return array_filter($meta_tags, 'removeAppleTouchIconFilter');
+}
 // --------------------------------------------------------------------------------------------------------------------------- // ?>

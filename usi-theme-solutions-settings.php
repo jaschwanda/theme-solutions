@@ -269,6 +269,7 @@ class USI_Theme_Solutions_Settings extends USI_WordPress_Solutions_Settings {
          'remove_recent_comments_style',
          'rest_output_link_wp_head',         // 10,0;
          'rsd_link',
+         'site_icon_meta_tags', 
          'start_post_rel_link',
          'wlwmanifest_link',
          'wp_generator',
@@ -278,7 +279,7 @@ class USI_Theme_Solutions_Settings extends USI_WordPress_Solutions_Settings {
          'wp_print_styles',                  // 8;
          'wp_resource_hints',                // 2;
          'wp_shortlink_wp_head',             // 10,0;
-      // 'wp_site_icon',                     // 99;
+         'wp_site_icon',                     // 99;
       );
       $wp_header_settings = array();
       for ($ith = 0; $ith < count($wp_header); $ith++) {
