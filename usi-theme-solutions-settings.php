@@ -22,17 +22,17 @@ require_once(USI_THEME_SOLUTIONS_WORDPRESS_SETTINGS);
 
 class USI_Theme_Solutions_Settings extends USI_WordPress_Solutions_Settings {
 
-   const VERSION = '1.4.0 (2020-01-05)';
+   const VERSION = '1.4.1 (2020-03-02)';
 
    function __construct() {
 
       parent::__construct(
-         USI_Theme_Solutions::NAME, 
-         USI_Theme_Solutions::PREFIX, 
-         USI_Theme_Solutions::TEXTDOMAIN,
-         USI_Theme_Solutions::$options,
-         true,
-         false
+         array(
+            'name' => USI_Theme_Solutions::NAME, 
+            'prefix' => USI_Theme_Solutions::PREFIX, 
+            'text_domain' => USI_Theme_Solutions::TEXTDOMAIN,
+            'options' => USI_Theme_Solutions::$options,
+         )
       );
 
       if (empty($this->options['jquery']['load']))   $this->options['jquery']['load']   = 'none';
@@ -314,7 +314,7 @@ class USI_Theme_Solutions_Settings extends USI_WordPress_Solutions_Settings {
       foreach ($scripts as $script_value) {
          $tokens = explode(' ', $script_value);
          $id     = $tokens[0];
-         $scripts_settings[$id] = array('class' => 'large-text', 'type' => 'text', 'label' => $id);
+         $scripts_settings[$id] = array('f-class' => 'large-text', 'type' => 'text', 'label' => $id);
          if ('new_scripts' == $id) {
             $scripts_settings[$id]['label'] = __('Add Script', USI_Theme_Solutions::TEXTDOMAIN);
             $scripts_settings[$id]['notes'] = '<i>unique-id &nbsp; script/path/name &nbsp; version &nbsp; footer</i>';
@@ -333,7 +333,7 @@ class USI_Theme_Solutions_Settings extends USI_WordPress_Solutions_Settings {
       );
       $social_media_settings = array();
       foreach ($social_media as $media_id => $media_title) {
-         $social_media_settings[$media_id] = array('class' => 'large-text', 'type' => 'text', 'label' => $media_title);
+         $social_media_settings[$media_id] = array('f-class' => 'large-text', 'type' => 'text', 'label' => $media_title);
       }
 
       $styles = isset($this->options['styles']) ? $this->options['styles'] : array();
@@ -342,7 +342,7 @@ class USI_Theme_Solutions_Settings extends USI_WordPress_Solutions_Settings {
       foreach ($styles as $style_value) {
          $tokens = explode(' ', $style_value);
          $id     = $tokens[0];
-         $styles_settings[$id] = array('class' => 'large-text', 'type' => 'text', 'label' => $id);
+         $styles_settings[$id] = array('f-class' => 'large-text', 'type' => 'text', 'label' => $id);
          if ('new_styles' == $id) {
             $styles_settings[$id]['label'] = __('Add Style', USI_Theme_Solutions::TEXTDOMAIN);
             $styles_settings[$id]['notes'] = '<i>unique-id &nbsp; style/path/name &nbsp; version &nbsp; media</i>';
@@ -355,7 +355,7 @@ class USI_Theme_Solutions_Settings extends USI_WordPress_Solutions_Settings {
       foreach ($templates as $template_value) {
          $tokens = explode(' ', $template_value);
          $id     = $tokens[0];
-         $templates_settings[$id] = array('class' => 'large-text', 'type' => 'text', 'label' => $id);
+         $templates_settings[$id] = array('f-class' => 'large-text', 'type' => 'text', 'label' => $id);
          if ('new_templates' == $id) {
             $templates_settings[$id]['label'] = __('Add Template', USI_Theme_Solutions::TEXTDOMAIN);
             $templates_settings[$id]['notes'] = '<i>unique-id &nbsp; first-part &nbsp; second-part &nbsp; . . . &nbsp; nth-part</i>';
@@ -378,7 +378,7 @@ class USI_Theme_Solutions_Settings extends USI_WordPress_Solutions_Settings {
       foreach ($trim_urls as $trim_url_value) {
          $tokens = explode(' ', $trim_url_value);
          $id     = $tokens[0];
-         $trim_urls_settings[$id] = array('class' => 'large-text', 'type' => 'text', 'label' => $id);
+         $trim_urls_settings[$id] = array('f-class' => 'large-text', 'type' => 'text', 'label' => $id);
          if ('new_trim_urls' == $id) {
             $trim_urls_settings[$id]['label'] = __('Add URL trim', USI_Theme_Solutions::TEXTDOMAIN);
             $trim_urls_settings[$id]['notes'] = '<i>unique-id &nbsp; long/url &nbsp; short/url</i>';
@@ -485,7 +485,7 @@ class USI_Theme_Solutions_Settings extends USI_WordPress_Solutions_Settings {
       foreach ($widget_areas as $widget_area_value) {
          $tokens = explode(' ', $widget_area_value);
          $id     = $tokens[0];
-         $widget_areas_settings[$id] = array('class' => 'large-text', 'type' => 'text', 'label' => $id);
+         $widget_areas_settings[$id] = array('f-class' => 'large-text', 'type' => 'text', 'label' => $id);
          if ('new_widget_areas' == $id) {
             $widget_areas_settings[$id]['label'] = __('Add Widgetized Area', USI_Theme_Solutions::TEXTDOMAIN);
             $widget_areas_settings[$id]['notes'] = '<i>unique-id &nbsp; name &nbsp; description &nbsp; before_widget_html &nbsp; after_widget_html &nbsp; before_title_html &nbsp; after_title_html</i>';
@@ -498,17 +498,17 @@ class USI_Theme_Solutions_Settings extends USI_WordPress_Solutions_Settings {
             'label' => __('Administrator Pages', USI_Theme_Solutions::TEXTDOMAIN),
             'settings' => array(
                'admin_bar_menu' => array(
-                  'class' => 'large-text', 
+                  'f-class' => 'large-text', 
                   'type' => 'text', 
                   'label' => 'admin_bar_menu',
                ),
                'admin_footer_text' => array(
-                  'class' => 'large-text', 
+                  'f-class' => 'large-text', 
                   'type' => 'text', 
                   'label' => 'admin_footer_text',
                ),
                'update_footer' => array(
-                  'class' => 'large-text', 
+                  'f-class' => 'large-text', 
                   'type' => 'text', 
                   'label' => 'update_footer',
                ),
@@ -593,7 +593,7 @@ class USI_Theme_Solutions_Settings extends USI_WordPress_Solutions_Settings {
                   ),
                ), // source;
                'version' => array(
-                  'class' => 'large-text', 
+                  'f-class' => 'large-text', 
                   'type' => 'text', 
                   'label' => 'Version',
                   'notes' => 'dummy',
@@ -605,22 +605,22 @@ class USI_Theme_Solutions_Settings extends USI_WordPress_Solutions_Settings {
             'label' => __('Administrator Pages', USI_Theme_Solutions::TEXTDOMAIN),
             'settings' => array(
                'copyright' => array(
-                  'class' => 'large-text', 
+                  'f-class' => 'large-text', 
                   'type' => 'text', 
                   'label' => 'copyright',
                ),
                'description' => array(
-                  'class' => 'large-text', 
+                  'f-class' => 'large-text', 
                   'type' => 'text', 
                   'label' => 'description',
                ),
                'format-detection' => array(
-                  'class' => 'large-text', 
+                  'f-class' => 'large-text', 
                   'type' => 'text', 
                   'label' => 'format-detection',
                ),
                'viewport' => array(
-                  'class' => 'large-text', 
+                  'f-class' => 'large-text', 
                   'type' => 'text', 
                   'label' => 'viewport',
                ),
@@ -658,12 +658,12 @@ class USI_Theme_Solutions_Settings extends USI_WordPress_Solutions_Settings {
             'label' => __('Search Engine Tools', USI_Theme_Solutions::TEXTDOMAIN),
             'settings' => array(
                'google_analytics' => array(
-                  'class' => 'large-text', 
+                  'f-class' => 'large-text', 
                   'type' => 'text', 
                   'label' => 'Google Analytics',
                ),
                'page_title_suffix' => array(
-                  'class' => 'large-text', 
+                  'f-class' => 'large-text', 
                   'type' => 'text', 
                   'label' => 'Page Title Suffix',
                ),
