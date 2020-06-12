@@ -2,6 +2,9 @@
 
 Theme-Solutions theme framework changes are logged here using <a href="http://semver.org/">Semantic Versioning</a>.
 
+## 1.4.2 (2020-06-12) ##
+* Added option to disable admin notices for non-admin users.
+
 ## 1.4.0 (2020-01-05) ##
 * Added 404 page.
 * Updated all version numbers to be the same.
