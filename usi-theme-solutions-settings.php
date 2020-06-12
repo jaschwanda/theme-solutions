@@ -22,7 +22,7 @@ require_once(USI_THEME_SOLUTIONS_WORDPRESS_SETTINGS);
 
 class USI_Theme_Solutions_Settings extends USI_WordPress_Solutions_Settings {
 
-   const VERSION = '1.4.1 (2020-03-02)';
+   const VERSION = '1.4.2 (2020-06-12)';
 
    function __construct() {
 
@@ -395,6 +395,7 @@ class USI_Theme_Solutions_Settings extends USI_WordPress_Solutions_Settings {
          'auto_update_plugin' => ' &nbsp; ' . __('Applies only to plugins that support automatic updates', USI_Theme_Solutions::TEXTDOMAIN),
          'auto_update_theme' => ' &nbsp; ' . __('Applies only to themes that support automatic updates', USI_Theme_Solutions::TEXTDOMAIN),
          'auto_update_translation' => ' &nbsp; ' . __('WordPress Default', USI_Theme_Solutions::TEXTDOMAIN),
+         'disable_admin_notice' => null,
       );
       $readonly = array(
          'automatic_updater_disabled' => false,
@@ -405,6 +406,7 @@ class USI_Theme_Solutions_Settings extends USI_WordPress_Solutions_Settings {
          'auto_update_plugin' => true,
          'auto_update_theme' => true,
          'auto_update_translation' => true,
+         'disable_admin_notice' => false,
       );
       if (empty($options['automatic_updater_disabled'])) {
          $readonly['auto_update_core']   =
@@ -426,13 +428,15 @@ class USI_Theme_Solutions_Settings extends USI_WordPress_Solutions_Settings {
          'auto_update_plugin' => __('Enable Plugin Updates', USI_Theme_Solutions::TEXTDOMAIN),
          'auto_update_theme' => __('Enable Theme Updates', USI_Theme_Solutions::TEXTDOMAIN),
          'auto_update_translation' => __('Enable Translation Updates', USI_Theme_Solutions::TEXTDOMAIN),
+         'disable_admin_notice' => __('Disable Non-Admin Notices', USI_Theme_Solutions::TEXTDOMAIN),
       );
       $updates_settings = array();
       $indent = '<span style="display:inline-block; width:16px;"></span>';
       $index  = 0;
       foreach ($updates as $update_id => $update_label) {
          switch ($index++) {
-         case 0: $prefix = ''; break;
+         case 0:
+         case 8: $prefix = ''; break;
          case 1:
          case 5: $prefix = $indent; break;
          case 2: $prefix = $indent . $indent; break;

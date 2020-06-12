@@ -4,7 +4,7 @@
  *
  * @package WordPress
  * @subpackage Theme-Solutions
- * @since Theme-Solutions 1.4.0 (2020-01-05)
+ * @since Theme-Solutions 1.4.2 (2020-06-12)
  *
  **/
 
@@ -16,7 +16,7 @@
 
 class USI_Theme_Solutions {
 
-   const VERSION    = '1.4.0 (2020-01-05)';
+   const VERSION    = '1.4.2 (2020-06-12)';
    const NAME       = 'Theme-Solutions';
    const PREFIX     = 'usi-theme';
    const TEXTDOMAIN = 'usi-theme-solutions';
@@ -65,6 +65,12 @@ class USI_Theme_Solutions {
    function action_activated_plugin() {
       usi_log('plugin_install_errors=' . ob_get_contents());
    } // action_activated_plugin();
+
+   function action_admin_head() {
+      if (!current_user_can('update_core')) {
+         remove_action('admin_notices', 'update_nag', 3);
+      }
+   } // action_admin_head();
    
    function action_after_setup_theme() {
       if (is_admin()) {
@@ -179,6 +185,9 @@ class USI_Theme_Solutions {
    function add_actions() {
       if (!empty(self::$options['miscellaneous']['log_plugin_install_errors'])) {
          add_action('activated_plugin', array($this, 'action_activated_plugin'));
+      }
+      if (!empty(self::$options['updates']['disable_admin_notice'])) {
+         add_action('admin_head', array($this, 'action_admin_head'), 1);
       }
       add_action('after_setup_theme', array($this, 'action_after_setup_theme'));
       add_action('widgets_init', array($this, 'action_widgets_init'), 10);
@@ -369,4 +378,5 @@ function prevent_apple_touch_icon_metatag($meta_tags){
 //   return(array());
     return array_filter($meta_tags, 'removeAppleTouchIconFilter');
 }
+
 // --------------------------------------------------------------------------------------------------------------------------- // ?>

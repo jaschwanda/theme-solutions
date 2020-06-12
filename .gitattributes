@@ -1,0 +1,2 @@
+# used to remove files from deployment using `git archive`;
+.gitattributes export-ignore
