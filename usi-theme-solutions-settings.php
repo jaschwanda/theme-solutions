@@ -22,7 +22,7 @@ require_once(USI_THEME_SOLUTIONS_WORDPRESS_SETTINGS);
 
 class USI_Theme_Solutions_Settings extends USI_WordPress_Solutions_Settings {
 
-   const VERSION = '1.4.3 (2020-06-15)';
+   const VERSION = '1.4.4 (2020-06-15)';
 
    function __construct() {
 
@@ -501,13 +501,6 @@ class USI_Theme_Solutions_Settings extends USI_WordPress_Solutions_Settings {
          'admin' => array(
             'label' => __('Administrator Pages', USI_Theme_Solutions::TEXTDOMAIN),
             'settings' => array(
-               'admin_global_message' => array(
-                  'f-class' => 'large-text', 
-                  'rows' => 2,
-                  'type' => 'textarea', 
-                  'label' => 'admin_global_message',
-                  'notes' => 'height <|> style <|> message.',
-               ),
                'admin_bar_menu' => array(
                   'f-class' => 'large-text', 
                   'type' => 'text', 
@@ -522,6 +515,20 @@ class USI_Theme_Solutions_Settings extends USI_WordPress_Solutions_Settings {
                   'f-class' => 'large-text', 
                   'type' => 'text', 
                   'label' => 'update_footer',
+               ),
+               'admin_global_message' => array(
+                  'f-class' => 'large-text', 
+                  'rows' => 2,
+                  'type' => 'textarea', 
+                  'label' => 'global_message',
+                  'notes' => 'height <|> style <|> message.',
+               ),
+               'admin_maintanence_message' => array(
+                  'f-class' => 'large-text', 
+                  'rows' => 2,
+                  'type' => 'textarea', 
+                  'label' => 'maintenance_message',
+                  'notes' => '&lt;h1&gt;' . get_bloginfo('name') . '&lt;/h1&gt;&lt;br/&gt;Is down for maintenance, it should be up at?',
                ),
                'disable-editor' => array(
                   'type' => 'checkbox', 

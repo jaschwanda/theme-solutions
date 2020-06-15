@@ -16,7 +16,7 @@
 
 class USI_Theme_Solutions {
 
-   const VERSION    = '1.4.3 (2020-06-15)';
+   const VERSION    = '1.4.4 (2020-06-15)';
    const NAME       = 'Theme-Solutions';
    const PREFIX     = 'usi-theme';
    const TEXTDOMAIN = 'usi-theme-solutions';
@@ -52,6 +52,10 @@ class USI_Theme_Solutions {
                }
             }
          }
+      }
+
+      if (!empty(self::$options['admin']['admin_maintanence_message'])) {
+         self::display_maintenance_message(self::$options['admin']['admin_maintanence_message']);
       }
 
       $this->add_actions();
@@ -253,6 +257,16 @@ class USI_Theme_Solutions {
          if (isset($options['post-thumbnails'])) add_theme_support('post-thumbnails');
       }
    } // add_support();
+
+   private static function display_maintenance_message($message) {
+      $user = wp_get_current_user();
+      if ($user && !empty($user->roles)) {
+         foreach ($user->roles as $role) {
+            if ('administrator' == $role) return;
+         }
+      }
+      wp_die($message);
+   } // display_maintenance_message();
 
    function filter_script_loader_tag($tag, $id, $src) {
       if (self::$trim_urls_source) {
