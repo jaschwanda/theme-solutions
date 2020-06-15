@@ -3,7 +3,7 @@
 Theme-Solutions theme framework changes are logged here using <a href="http://semver.org/">Semantic Versioning</a>.
 
 ## 1.4.4 (2020-06-15) ##
-* Added site maintenace page.
+* Added site maintenance page.
 
 ## 1.4.3 (2020-06-15) ##
 * Added global admin message bar.
