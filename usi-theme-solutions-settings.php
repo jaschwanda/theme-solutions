@@ -22,7 +22,7 @@ require_once(USI_THEME_SOLUTIONS_WORDPRESS_SETTINGS);
 
 class USI_Theme_Solutions_Settings extends USI_WordPress_Solutions_Settings {
 
-   const VERSION = '1.4.2 (2020-06-12)';
+   const VERSION = '1.4.3 (2020-06-15)';
 
    function __construct() {
 
@@ -501,6 +501,13 @@ class USI_Theme_Solutions_Settings extends USI_WordPress_Solutions_Settings {
          'admin' => array(
             'label' => __('Administrator Pages', USI_Theme_Solutions::TEXTDOMAIN),
             'settings' => array(
+               'admin_global_message' => array(
+                  'f-class' => 'large-text', 
+                  'rows' => 2,
+                  'type' => 'textarea', 
+                  'label' => 'admin_global_message',
+                  'notes' => 'height <|> style <|> message.',
+               ),
                'admin_bar_menu' => array(
                   'f-class' => 'large-text', 
                   'type' => 'text', 

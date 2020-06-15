@@ -16,7 +16,7 @@
 
 class USI_Theme_Solutions {
 
-   const VERSION    = '1.4.2 (2020-06-12)';
+   const VERSION    = '1.4.3 (2020-06-15)';
    const NAME       = 'Theme-Solutions';
    const PREFIX     = 'usi-theme';
    const TEXTDOMAIN = 'usi-theme-solutions';
@@ -131,26 +131,6 @@ class USI_Theme_Solutions {
       }
    } // action_wp_enqueue_scripts();
 
-   function action_meta_tags() {
-
-      global $post;
-
-      if ($post) USI_Theme_Solutions::$options_post = get_post_meta($post->ID, '_usi-theme-page', true);
-
-      echo '    <meta charset="' . get_bloginfo('charset') . '">' . PHP_EOL;
-      if (isset(self::$options['meta_tags'])) {
-         $options = self::$options['meta_tags'];
-         foreach ($options as $key => $value) {
-            if (!empty($value)) echo '    <meta name="' . $key . '" content="' . $value . '">' . PHP_EOL;
-         }
-      }
-
-      if (!empty(USI_Theme_Solutions::$options_post['hide'])) {
-         echo '    <meta name="robots" content="noindex,nofollow" />' . PHP_EOL;
-      }
-
-   } // action_meta_tags();
-
    function action_widgets_init() {
       if (isset(self::$options['widget_areas'])) {
          $options = self::$options['widget_areas'];
@@ -174,6 +154,24 @@ class USI_Theme_Solutions {
       }
    } // action_widgets_init();
 
+   function action_wp_before_admin_bar_render() {
+      $tokens  = explode('<|>', self::$options['admin']['admin_global_message']);
+      $height  = !empty($tokens[0]) ? $tokens[0] : '';
+      $style   = !empty($tokens[1]) ? $tokens[1] : '';
+      $message = !empty($tokens[2]) ? $tokens[2] : '';
+      echo 
+         '<div id="usi-admin-message" style="' . $style . ' height:' . $height . 
+         '; display:block; left:0; position:fixed; top:0; width:100%; z-index:99999;">' . $message . '</div>' . PHP_EOL .
+         '<div id="usi-admin-spacer" style="display:block; height:' . $height . '; width:100%;"></div>' . PHP_EOL .
+         '<script>jQuery("#usi-admin-spacer").insertBefore("#wpwrap");</script>' . PHP_EOL;
+   } // action_wp_before_admin_bar_render();
+
+   function action_wp_after_admin_bar_render() {
+      $tokens  = explode('<|>', self::$options['admin']['admin_global_message']);
+      $height  = !empty($tokens[0]) ? $tokens[0] : '';
+      echo "<script>jQuery('#wpadminbar').css('top', '$height');</script>" . PHP_EOL;
+   } // action_wp_after_admin_bar_render()
+
    function action_wp_footer() {
       if (!empty(self::$options['search']['google_analytics'])) echo '    ' . self::$options['search']['google_analytics'];
    } // action_wp_footer();
@@ -181,6 +179,26 @@ class USI_Theme_Solutions {
    function action_wp_head_inline_style() {
       // echo "    <style>\n      /* theme customizer .jim2{color:red;} */\n    </style>\n";
    } // action_wp_head_inline_style();
+
+   function action_wp_head_meta_tags() {
+
+      global $post;
+
+      if ($post) USI_Theme_Solutions::$options_post = get_post_meta($post->ID, '_usi-theme-page', true);
+
+      echo '    <meta charset="' . get_bloginfo('charset') . '">' . PHP_EOL;
+      if (isset(self::$options['meta_tags'])) {
+         $options = self::$options['meta_tags'];
+         foreach ($options as $key => $value) {
+            if (!empty($value)) echo '    <meta name="' . $key . '" content="' . $value . '">' . PHP_EOL;
+         }
+      }
+
+      if (!empty(USI_Theme_Solutions::$options_post['hide'])) {
+         echo '    <meta name="robots" content="noindex,nofollow" />' . PHP_EOL;
+      }
+
+   } // action_wp_head_meta_tags();
 
    function add_actions() {
       if (!empty(self::$options['miscellaneous']['log_plugin_install_errors'])) {
@@ -191,8 +209,12 @@ class USI_Theme_Solutions {
       }
       add_action('after_setup_theme', array($this, 'action_after_setup_theme'));
       add_action('widgets_init', array($this, 'action_widgets_init'), 10);
+      if (!empty(self::$options['admin']['admin_global_message'])) {
+         add_action('wp_after_admin_bar_render', array($this, 'action_wp_after_admin_bar_render'));
+         add_action('wp_before_admin_bar_render', array($this, 'action_wp_before_admin_bar_render'));
+      }
       add_action('wp_enqueue_scripts', array($this, 'action_wp_enqueue_scripts'), 20);
-      add_action('wp_head', array($this, 'action_meta_tags'), 8.5);
+      add_action('wp_head', array($this, 'action_wp_head_meta_tags'), 8.5);
       add_action('wp_head', array($this, 'action_wp_head_inline_style'), 30);
       add_action('wp_footer', array($this, 'action_wp_footer'), 20);
    } // add_actions();
