@@ -22,7 +22,7 @@ require_once(USI_THEME_SOLUTIONS_WORDPRESS_SETTINGS);
 
 class USI_Theme_Solutions_Settings extends USI_WordPress_Solutions_Settings {
 
-   const VERSION = '1.4.4 (2020-06-15)';
+   const VERSION = '1.5.0 (2020-09-27)';
 
    function __construct() {
 
