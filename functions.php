@@ -1,12 +1,32 @@
 <?php // ------------------------------------------------------------------------------------------------------------------------ //
-/**
- * Theme-Solutions
- *
- * @package WordPress
- * @subpackage Theme-Solutions
- * @since Theme-Solutions 1.5.0 (2020-09-27)
- *
- **/
+
+/* 
+Author:            Jim Schwanda
+Author URI:        https://www.usi2solve.com/leader
+Description:       The Theme-Solutions framework serves as a base for custom theme implementation. The WordPress-Solutions plugin is required for the Theme-Solutions framework to run properly. 
+Donate link:       https://www.usi2solve.com/donate/theme-solutions
+License:           GPL-3.0
+License URI:       https://github.com/jaschwanda/variable-solutions/blob/master/LICENSE.md
+Requires PHP:      5.6.25
+Tested up to:      5.3.2
+Text Domain:       usi-theme-solutions
+Theme Name:        Theme-Solutions
+Theme URI:         https://www.usi2solve.com/wordpress/theme-solutions
+Version:           1.5.1 (2020-10-17)
+*/
+
+/*
+Theme-Solutions is free software: you can redistribute it and/or modify it under the terms of the GNU General Public 
+License as published by the Free Software Foundation, either version 3 of the License, or any later version.
+ 
+Theme-Solutions is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied 
+warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+ 
+You should have received a copy of the GNU General Public License along with Variable-Solutions. If not, see 
+https://github.com/jaschwanda/theme-solutions/blob/master/LICENSE.md
+
+Copyright (c) 2020 by Jim Schwanda.
+*/
 
 // https://developer.wordpress.org/plugins/internationalization/how-to-internationalize-your-plugin/
 // https://developer.wordpress.org/themes/basics/theme-functions/
@@ -16,7 +36,7 @@
 
 class USI_Theme_Solutions {
 
-   const VERSION    = '1.5.0 (2020-09-27)';
+   const VERSION    = '1.5.1 (2020-10-17)';
    const NAME       = 'Theme-Solutions';
    const PREFIX     = 'usi-theme';
    const TEXTDOMAIN = 'usi-theme-solutions';

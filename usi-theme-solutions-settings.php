@@ -2,27 +2,20 @@
 
 defined('ABSPATH') or die('Accesss not allowed.');
 
-define('USI_THEME_SOLUTIONS_WORDPRESS_SETTINGS', WP_PLUGIN_DIR . '/usi-wordpress-solutions/usi-wordpress-solutions-settings.php');
+// IF required plugins are not available;
+if (!is_dir(WP_PLUGIN_DIR . '/usi-wordpress-solutions')) {
+   add_action('admin_notices', function () {
+      echo '<div class="notice notice-warning is-dismissible"><p>' . 
+         __('The <b>WordPress-Solutions</b> plugin is required for the <b>Theme-Solutions</b> framework to run properly.') . '</p></div>';
+   });
+   goto END_OF_FILE;
+} // ENDIF required plugins are not available;
 
-if (!file_exists(USI_THEME_SOLUTIONS_WORDPRESS_SETTINGS)) {
-
-   echo '<div class="notice notice-warning is-dismissible"><p>' . 
-      sprintf(
-         __('The %s plugin is required for the %s framework to run properly.', USI_Theme_Solutions::TEXTDOMAIN), 
-         '<b>WordPress-Solutions</b>',
-         '<b>Theme-Solutions</b>'
-      ) .
-      '</p></div>';
-
-   return; // Don't want to pocess the rest of the file;
-
-} 
-
-require_once(USI_THEME_SOLUTIONS_WORDPRESS_SETTINGS);
+require_once(WP_PLUGIN_DIR . '/usi-wordpress-solutions/usi-wordpress-solutions-settings.php');
 
 class USI_Theme_Solutions_Settings extends USI_WordPress_Solutions_Settings {
 
-   const VERSION = '1.5.0 (2020-09-27)';
+   const VERSION = '1.5.1 (2020-10-17)';
 
    function __construct() {
 
@@ -751,4 +744,4 @@ class USI_Theme_Solutions_Settings extends USI_WordPress_Solutions_Settings {
 
 new USI_Theme_Solutions_Settings();
 
-// --------------------------------------------------------------------------------------------------------------------------- // ?>
+END_OF_FILE: // -------------------------------------------------------------------------------------------------------------- // ?>
