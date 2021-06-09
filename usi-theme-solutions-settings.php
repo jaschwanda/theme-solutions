@@ -15,7 +15,7 @@ require_once(WP_PLUGIN_DIR . '/usi-wordpress-solutions/usi-wordpress-solutions-s
 
 class USI_Theme_Solutions_Settings extends USI_WordPress_Solutions_Settings {
 
-   const VERSION = '1.5.1 (2020-10-17)';
+   const VERSION = '1.5.2 (2021-06-09)';
 
    function __construct() {
 
@@ -556,6 +556,11 @@ class USI_Theme_Solutions_Settings extends USI_WordPress_Solutions_Settings {
                   'type' => 'checkbox', 
                   'label' => 'Base URL',
                ),
+               'favicon' => array(
+                  'f-class' => 'large-text', 
+                  'type' => 'text', 
+                  'label' => 'favicon',
+               ),
             ),
          ), // header;
 
@@ -645,6 +650,11 @@ class USI_Theme_Solutions_Settings extends USI_WordPress_Solutions_Settings {
                   'type' => 'checkbox', 
                   'label' => 'log_plugin_install_errors',
                   'notes' => 'Only recommended when installing or testing new plugins. &nbsp; <b>Note:</b> The plugin generated n characters of unexpected output error is often caused when the\'re extra characters before or after the </i>&lt;?php ?&gt;<i> tags or if the .php file is not saved as UTF without BOM.',
+               ),
+               'log_error_get_last' => array(
+                  'type' => 'checkbox', 
+                  'label' => 'log_error_get_last',
+                  'notes' => 'Only recommended when doing debugging, calls the error_get_last() method and processes results via usi::log() method.',
                ),
             ),
          ), // miscellaneous;

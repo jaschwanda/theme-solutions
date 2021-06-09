@@ -12,7 +12,7 @@ Tested up to:      5.3.2
 Text Domain:       usi-theme-solutions
 Theme Name:        Theme-Solutions
 Theme URI:         https://www.usi2solve.com/wordpress/theme-solutions
-Version:           1.5.1 (2020-10-17)
+Version:           1.5.2
 */
 
 /*
@@ -36,7 +36,7 @@ Copyright (c) 2020 by Jim Schwanda.
 
 class USI_Theme_Solutions {
 
-   const VERSION    = '1.5.1 (2020-10-17)';
+   const VERSION    = '1.5.2 (2021-06-09)';
    const NAME       = 'Theme-Solutions';
    const PREFIX     = 'usi-theme';
    const TEXTDOMAIN = 'usi-theme-solutions';
@@ -87,7 +87,7 @@ class USI_Theme_Solutions {
    } // __construct();
 
    function action_activated_plugin() {
-      usi_log('plugin_install_errors=' . ob_get_contents());
+      usi::log('plugin_install_errors=', ob_get_contents());
    } // action_activated_plugin();
 
    function action_admin_head() {
@@ -198,6 +198,10 @@ class USI_Theme_Solutions {
 
    function action_wp_footer() {
       if (!empty(self::$options['search']['google_analytics'])) echo '    ' . self::$options['search']['google_analytics'];
+      if (!empty(self::$options['miscellaneous']['log_error_get_last'])) {
+         $error = error_get_last();
+         if (!empty($error)) usi::log('error_get_last=', $error);
+      }
    } // action_wp_footer();
 
    function action_wp_head_inline_style() {
@@ -427,9 +431,11 @@ function widget($atts) {
     return $output;
     
 }
+
 function removeAppleTouchIconFilter($string) {
   return strpos($string, 'apple-touch-icon') === false;
 }
+
 function prevent_apple_touch_icon_metatag($meta_tags){
 //   return(array());
     return array_filter($meta_tags, 'removeAppleTouchIconFilter');

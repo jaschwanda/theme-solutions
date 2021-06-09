@@ -2,6 +2,9 @@
 
 Theme-Solutions theme framework changes are logged here using <a href="http://semver.org/">Semantic Versioning</a>.
 
+## 1.5.2 (2021-06-09) ##
+* Added favicon and error_get_last() support.
+
 ## 1.5.1 (2020-10-17) ##
 * Fixed reference issue, updated all version numbers to be the same.
 
