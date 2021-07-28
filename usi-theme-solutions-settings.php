@@ -15,7 +15,7 @@ require_once(WP_PLUGIN_DIR . '/usi-wordpress-solutions/usi-wordpress-solutions-s
 
 class USI_Theme_Solutions_Settings extends USI_WordPress_Solutions_Settings {
 
-   const VERSION = '1.5.2 (2021-06-09)';
+   const VERSION = '1.5.3 (2021-07-28)';
 
    function __construct() {
 
@@ -680,8 +680,19 @@ class USI_Theme_Solutions_Settings extends USI_WordPress_Solutions_Settings {
             'settings' => array(
                'google_analytics' => array(
                   'f-class' => 'large-text', 
-                  'type' => 'text', 
+                  'rows' => 4,
+                  'type' => 'textarea', 
                   'label' => 'Google Analytics',
+               ),
+               'google_analytics_head' => array(
+                  'type' => 'checkbox', 
+                  'label' => __('Analytics in header', USI_Theme_Solutions::TEXTDOMAIN),
+                  'notes' => 'If checked code goes in the &lt;head&gt;&lt;/head&gt; tags, otherwise it goes at the bottom of the page.',
+               ),
+               'google_analytics_admin' => array(
+                  'type' => 'checkbox', 
+                  'label' => __('Analytics in admin', USI_Theme_Solutions::TEXTDOMAIN),
+                  'notes' => 'If checked code goes in all pages including administratative pages.',
                ),
                'page_title_suffix' => array(
                   'f-class' => 'large-text', 

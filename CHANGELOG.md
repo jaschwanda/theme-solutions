@@ -2,6 +2,9 @@
 
 Theme-Solutions theme framework changes are logged here using <a href="http://semver.org/">Semantic Versioning</a>.
 
+## 1.5.3 (2021-07-28) ##
+* Updated Google Analytics handling.
+
 ## 1.5.2 (2021-06-09) ##
 * Added favicon and error_get_last() support.
 
