@@ -12,7 +12,7 @@ Tested up to:      5.3.2
 Text Domain:       usi-theme-solutions
 Theme Name:        Theme-Solutions
 Theme URI:         https://www.usi2solve.com/wordpress/theme-solutions
-Version:           1.5.3
+Version:           1.5.4
 */
 
 /*
@@ -36,7 +36,7 @@ Copyright (c) 2020 by Jim Schwanda.
 
 class USI_Theme_Solutions {
 
-   const VERSION    = '1.5.3 (2021-07-28)';
+   const VERSION    = '1.5.4 (2021-11-03)';
    const NAME       = 'Theme-Solutions';
    const PREFIX     = 'usi-theme';
    const TEXTDOMAIN = 'usi-theme-solutions';

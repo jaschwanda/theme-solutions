@@ -2,6 +2,9 @@
 
 Theme-Solutions theme framework changes are logged here using <a href="http://semver.org/">Semantic Versioning</a>.
 
+## 1.5.4 (2021-11-03) ##
+* Set all versions numbers to same version.
+
 ## 1.5.3 (2021-07-28) ##
 * Updated Google Analytics handling.
 
