@@ -15,7 +15,7 @@ require_once(WP_PLUGIN_DIR . '/usi-wordpress-solutions/usi-wordpress-solutions-s
 
 class USI_Theme_Solutions_Settings extends USI_WordPress_Solutions_Settings {
 
-   const VERSION = '1.5.4 (2021-11-03)';
+   const VERSION = '1.5.5 (2022-11-01)';
 
    function __construct() {
 

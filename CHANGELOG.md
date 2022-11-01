@@ -2,6 +2,10 @@
 
 Theme-Solutions theme framework changes are logged here using <a href="http://semver.org/">Semantic Versioning</a>.
 
+## 1.5.5 (2022-11-01) ##
+* Modifications made for PHP 8.1 compatibility.
+* Set all versions numbers to same version.
+
 ## 1.5.4 (2021-11-03) ##
 * Set all versions numbers to same version.
 

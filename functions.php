@@ -36,7 +36,7 @@ Copyright (c) 2020 by Jim Schwanda.
 
 class USI_Theme_Solutions {
 
-   const VERSION    = '1.5.4 (2021-11-03)';
+   const VERSION    = '1.5.5 (2022-11-01)';
    const NAME       = 'Theme-Solutions';
    const PREFIX     = 'usi-theme';
    const TEXTDOMAIN = 'usi-theme-solutions';
@@ -246,7 +246,7 @@ class USI_Theme_Solutions {
          add_action('wp_before_admin_bar_render', array($this, 'action_wp_before_admin_bar_render'));
       }
       add_action('wp_enqueue_scripts', array($this, 'action_wp_enqueue_scripts'), 20);
-      add_action('wp_head', array($this, 'action_wp_head_meta_tags'), 8.5);
+      add_action('wp_head', array($this, 'action_wp_head_meta_tags'), 8);
       add_action('wp_head', array($this, 'action_wp_head_inline_style'), 30);
       add_action('wp_footer', array($this, 'action_wp_footer'), 20);
    } // add_actions();
