@@ -12,7 +12,7 @@ Tested up to:      5.3.2
 Text Domain:       usi-theme-solutions
 Theme Name:        Theme-Solutions
 Theme URI:         https://www.usi2solve.com/wordpress/theme-solutions
-Version:           1.5.4
+Version:           1.5.6
 */
 
 /*
@@ -36,7 +36,7 @@ Copyright (c) 2020 by Jim Schwanda.
 
 class USI_Theme_Solutions {
 
-   const VERSION    = '1.5.5 (2022-11-01)';
+   const VERSION    = '1.5.6 (2022-11-22)';
    const NAME       = 'Theme-Solutions';
    const PREFIX     = 'usi-theme';
    const TEXTDOMAIN = 'usi-theme-solutions';
@@ -287,6 +287,8 @@ class USI_Theme_Solutions {
    } // add_support();
 
    private static function display_maintenance_message($message) {
+      if (str_ends_with($_SERVER['REDIRECT_URL'] ?? '', 'wp-login.php')) return;
+      if (str_ends_with($_SERVER['SCRIPT_NAME']  ?? '', 'wp-login.php')) return;
       $user = wp_get_current_user();
       if ($user && !empty($user->roles)) {
          foreach ($user->roles as $role) {

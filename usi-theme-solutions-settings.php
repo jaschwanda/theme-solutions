@@ -15,7 +15,7 @@ require_once(WP_PLUGIN_DIR . '/usi-wordpress-solutions/usi-wordpress-solutions-s
 
 class USI_Theme_Solutions_Settings extends USI_WordPress_Solutions_Settings {
 
-   const VERSION = '1.5.5 (2022-11-01)';
+   const VERSION = '1.5.6 (2022-11-22)';
 
    function __construct() {
 
@@ -521,7 +521,7 @@ class USI_Theme_Solutions_Settings extends USI_WordPress_Solutions_Settings {
                   'rows' => 2,
                   'type' => 'textarea', 
                   'label' => 'maintenance_message',
-                  'notes' => '&lt;h1&gt;' . get_bloginfo('name') . '&lt;/h1&gt;&lt;br/&gt;Is down for maintenance, it should be up at?',
+                  'notes' => '&lt;h1&gt;' . get_bloginfo('name') . '&lt;/h1&gt;&lt;br/&gt;Is down for maintenance, it should be up at?<br/>Note - administrators can still sign in if they go to the wp-login.php page.',
                ),
                'disable-editor' => array(
                   'type' => 'checkbox', 
