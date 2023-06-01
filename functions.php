@@ -335,8 +335,15 @@ class USI_Theme_Solutions {
    } // get_menu();  
 
    public static function loop() {
+      // $hooks = USI_WordPress_Solutions_Hooks::get('the_content');
+      if (!empty(self::$options['editor']['remove-wpautop']))         remove_filter('the_content', 'wpautop');
+      if (!empty(self::$options['editor']['remove-wptexturize']))     remove_filter('the_content', 'wptexturize');
+      if (!empty(self::$options['editor']['remove-excerpt-wpautop'])) remove_filter('the_excerpt', 'wpautop');
       while (have_posts()) { 
          the_post(); 
+         //$content = get_the_content(null, false);
+         //$content = apply_filters('the_content', $content);
+         //$content = str_replace( ']]>', ']]&gt;', $content );
          the_content(); 
       } 
    } // loop();  

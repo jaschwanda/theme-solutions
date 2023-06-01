@@ -206,11 +206,11 @@ class USI_Theme_Solutions_Settings extends USI_WordPress_Solutions_Settings {
    } // get_user_role();
 
    function remove_filters(){
-      if (!empty($this->options['editor'])) {
+      if (!empty($this->options['editor'])) {;
          $options = $this->options['editor'];
-         if (!empty($options['remove_the_content_wpautop']))     remove_filter('the_content', 'wpautop');
-         if (!empty($options['remove_the_content_wptexturize'])) remove_filter('the_content', 'wptexturize');
-         if (!empty($options['remove_the_excerpt_wpautop']))     remove_filter('the_excerpt', 'wpautop');
+         if (!empty($options['remove-wpautop']))         remove_filter('the_content', 'wpautop');
+         if (!empty($options['remove-wptexturize']))     remove_filter('the_content', 'wptexturize');
+         if (!empty($options['remove-excerpt-wpautop'])) remove_filter('the_excerpt', 'wpautop');
       }
    } // remove_filters();
 
@@ -531,23 +531,23 @@ class USI_Theme_Solutions_Settings extends USI_WordPress_Solutions_Settings {
             ),
          ), // admin;
 
-         'editor' => array(
+         'editor' => [
             'label' => __('Editor Functions', USI_Theme_Solutions::TEXTDOMAIN),
-            'settings' => array(
-               'remove the_content wptexturize' => array(
+            'settings' => [
+               'remove-wptexturize' => [
                   'type' => 'checkbox', 
                   'label' => __('remove&nbsp;the_content&nbsp;wptexturize', USI_Theme_Solutions::TEXTDOMAIN),
-               ),
-               'remove the_content wpautop' => array(
+               ],
+               'remove-wpautop' => [
                   'type' => 'checkbox', 
                   'label' => __('remove the_content wpautop', USI_Theme_Solutions::TEXTDOMAIN),
-               ),
-               'remove the_excerpt wpautop' => array(
+               ],
+               'remove-excerpt-wpautop' => [
                   'type' => 'checkbox', 
                   'label' => __('remove the_excerpt wpautop', USI_Theme_Solutions::TEXTDOMAIN),
-               ),
-            ),
-         ), // editor;
+               ],
+            ],
+         ], // editor;
 
          'header' => array(
             'label' => __('Header Functions', USI_Theme_Solutions::TEXTDOMAIN),
