@@ -36,7 +36,7 @@ Copyright (c) 2020 by Jim Schwanda.
 
 class USI_Theme_Solutions {
 
-   const VERSION    = '1.5.6 (2022-11-22)';
+   const VERSION    = '1.5.7 (2023-06-03)';
    const NAME       = 'Theme-Solutions';
    const PREFIX     = 'usi-theme';
    const TEXTDOMAIN = 'usi-theme-solutions';
@@ -282,7 +282,10 @@ class USI_Theme_Solutions {
       if (isset(self::$options['support'])) {
          $options = self::$options['support'];
          if (isset($options['menus'])) add_theme_support('menus');
-         if (isset($options['post-thumbnails'])) add_theme_support('post-thumbnails');
+         if (isset($options['post-thumbnails'])) {
+            add_theme_support('post-thumbnails');
+            add_shortcode('feature_image', [$this, 'shortcode_feature_image']);
+         }
       }
    } // add_support();
 
@@ -400,6 +403,10 @@ class USI_Theme_Solutions {
          $height . 'px; vertical-align:top; width:' . $width . 'px;" target="null-frame"></a>';
       return($html);
    } // shortcode_email();
+
+   static function shortcode_feature_image($attributes, $content = null) {
+      return(has_post_thumbnail() ? get_the_post_thumbnail() : '');
+   } // shortcode_feature_image();
 
 } // Class USI_Theme_Solutions;
    

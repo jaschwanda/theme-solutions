@@ -2,6 +2,9 @@
 
 Theme-Solutions theme framework changes are logged here using <a href="http://semver.org/">Semantic Versioning</a>.
 
+## 1.5.7 (2023-06-03) ##
+* Added featured image short code.
+
 ## 1.5.6 (2022-11-22) ##
 * Enable administrators to still log in when the maintenance message is given.
 
