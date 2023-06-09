@@ -404,8 +404,15 @@ class USI_Theme_Solutions {
       return($html);
    } // shortcode_email();
 
+
    static function shortcode_feature_image($attributes, $content = null) {
-      return(has_post_thumbnail() ? get_the_post_thumbnail() : '');
+      if (!has_post_thumbnail()) return(null);
+      if (empty($attributes) || ('url' == $attributes[0])) return(get_the_post_thumbnail_url());
+      $id = get_post_thumbnail_id();
+      switch ($attributes[0]) {
+      case 'alt': return(get_post_meta($id, '_wp_attachment_image_alt', true));
+      }
+      return(null);
    } // shortcode_feature_image();
 
 } // Class USI_Theme_Solutions;
