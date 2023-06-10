@@ -20,12 +20,12 @@ class USI_Theme_Solutions_Settings extends USI_WordPress_Solutions_Settings {
    function __construct() {
 
       parent::__construct(
-         array(
+         [
             'name' => USI_Theme_Solutions::NAME, 
             'prefix' => USI_Theme_Solutions::PREFIX, 
             'text_domain' => USI_Theme_Solutions::TEXTDOMAIN,
             'options' => USI_Theme_Solutions::$options,
-         )
+         ]
       );
 
       if (empty($this->options['jquery']['load']))   $this->options['jquery']['load']   = 'none';
@@ -41,12 +41,18 @@ class USI_Theme_Solutions_Settings extends USI_WordPress_Solutions_Settings {
       add_meta_box(
          'usi-theme-page-meta-box', // Meta box id;
          __('Theme Solutions Options', USI_Theme_Solutions::TEXTDOMAIN), // Title;
-         array($this, 'render_meta_box'), // Render meta box callback;
+         [$this, 'render_meta_box'], // Render meta box callback;
          'page', // Screen type;
          'side', // Location on page;
          'low' // Priority;
       );
    } // action_add_meta_boxes();
+
+   function action_admin_head($css = null) {
+      parent::action_admin_head(
+         '.usi-theme-solutions-mono-font{font-family:courier;}' . PHP_EOL
+      );
+   } // action_admin_head();
 
    // The $wp_scripts global isn't set when the $this->sections() method is called so update now;
    function action_admin_init() {
@@ -74,22 +80,22 @@ class USI_Theme_Solutions_Settings extends USI_WordPress_Solutions_Settings {
    } // action_load_help_tab();
 
    function action_save_post($page_id) {
-      if (!current_user_can('edit_page', $page_id)) {      
+      if (!current_user_can('edit_page', $page_id)) {
       } else if (wp_is_post_autosave($page_id)) {
       } else if (wp_is_post_revision($page_id)) {
       } else if (empty($_POST['usi-theme-page-nonce'])) {
       } else if (!wp_verify_nonce($_POST['usi-theme-page-nonce'], basename(__FILE__))) {
       } else {
-         $new_options = array(
+         $new_options = [
             'hide' => !empty($_POST['usi-theme-page-hide']),
             'template' => !empty($_POST['usi-theme-page-template']) ? $_POST['usi-theme-page-template'] : 'default',
-         );
+         ];
          update_post_meta($page_id, '_usi-theme-page', $new_options);
       }
    } // action_save_post();
 
    function action_widgets_init() {
-      if (isset($this->options['wp_head']['remove_recent_comments_style'])) {
+      if (isset($this->options['wp_head']['recent_comments_style'])) {
          global $wp_widget_factory;
          remove_action('wp_head', array($wp_widget_factory->widgets['WP_Widget_Recent_Comments'], 'recent_comments_style'));
       }
@@ -110,13 +116,9 @@ class USI_Theme_Solutions_Settings extends USI_WordPress_Solutions_Settings {
 
    function add_actions() {
 
-      add_action('add_meta_boxes', array($this, 'action_add_meta_boxes'));
-
-      if (!empty($_REQUEST['page']) && (USI_Theme_Solutions::PREFIX . '-settings' == $_REQUEST['page'])) {
-         add_action('save_post', array($this, 'action_save_post'));
-      }
-
-      add_action('widgets_init', array($this, 'action_widgets_init'));
+      add_action('add_meta_boxes', [$this, 'action_add_meta_boxes']);
+      add_action('save_post', [$this, 'action_save_post']);
+      add_action('widgets_init', [$this, 'action_widgets_init']);
 
    } // add_actions();
 
@@ -218,8 +220,8 @@ class USI_Theme_Solutions_Settings extends USI_WordPress_Solutions_Settings {
 
       wp_nonce_field(basename(__FILE__), 'usi-theme-page-nonce');
 
-      $options = get_post_meta($post->ID, '_usi-theme-page', true);
-      $hide = !empty($options['hide']);
+      $options  = get_post_meta($post->ID, '_usi-theme-page', true);
+      $hide     = !empty($options['hide']);
       $template = !empty($options['template']) ? $options['template'] : 'default';
 
 ?>
@@ -250,16 +252,17 @@ class USI_Theme_Solutions_Settings extends USI_WordPress_Solutions_Settings {
       $wp_header = array(
          'adjacent_posts_rel_link',
          'adjacent_posts_rel_link_wp_head',  // 10,0;
+         'classic-theme-styles',
          'emoji_svg_url',
          'feed_links',                       // 2;
          'feed_links_extra',                 // 3;
+         'global-styles',
+         'gutenberg_css',
          'index_rel_link',
          'print_emoji_detection_script',     // 7;
          'print_emoji_styles',
+         'recent_comments_style',
          'rel_canonical',
-         'rel_canonical',
-         'remove_gutenberg_css',
-         'remove_recent_comments_style',
          'rest_output_link_wp_head',         // 10,0;
          'rsd_link',
          'site_icon_meta_tags', 
@@ -510,14 +513,14 @@ class USI_Theme_Solutions_Settings extends USI_WordPress_Solutions_Settings {
                   'label' => 'update_footer',
                ),
                'admin_global_message' => array(
-                  'f-class' => 'large-text', 
+                  'f-class' => 'large-text usi-theme-solutions-mono-font', 
                   'rows' => 2,
                   'type' => 'textarea', 
                   'label' => 'global_message',
                   'notes' => 'height <|> style <|> message.',
                ),
                'admin_maintanence_message' => array(
-                  'f-class' => 'large-text', 
+                  'f-class' => 'large-text usi-theme-solutions-mono-font', 
                   'rows' => 2,
                   'type' => 'textarea', 
                   'label' => 'maintenance_message',
@@ -679,7 +682,7 @@ class USI_Theme_Solutions_Settings extends USI_WordPress_Solutions_Settings {
             'label' => __('Search Engine Tools', USI_Theme_Solutions::TEXTDOMAIN),
             'settings' => array(
                'google_analytics' => array(
-                  'f-class' => 'large-text', 
+                  'f-class' => 'large-text usi-theme-solutions-mono-font', 
                   'rows' => 4,
                   'type' => 'textarea', 
                   'label' => 'Google Analytics',
