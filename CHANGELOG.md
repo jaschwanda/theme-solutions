@@ -2,6 +2,9 @@
 
 Theme-Solutions theme framework changes are logged here using <a href="http://semver.org/">Semantic Versioning</a>.
 
+## 1.5.8 (2023-06-20) ##
+* Removed cloak e-mail short code and put it in USI WordPress Solutions.
+
 ## 1.5.7 (2023-06-03) ##
 * Added featured image short code.
 

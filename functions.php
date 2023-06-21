@@ -12,7 +12,7 @@ Tested up to:      5.3.2
 Text Domain:       usi-theme-solutions
 Theme Name:        Theme-Solutions
 Theme URI:         https://www.usi2solve.com/wordpress/theme-solutions
-Version:           1.5.6
+Version:           1.5.8
 */
 
 /*
@@ -36,7 +36,7 @@ Copyright (c) 2020 by Jim Schwanda.
 
 class USI_Theme_Solutions {
 
-   const VERSION    = '1.5.7 (2023-06-03)';
+   const VERSION    = '1.5.8 (2023-06-20)';
    const NAME       = 'Theme-Solutions';
    const PREFIX     = 'usi-theme';
    const TEXTDOMAIN = 'usi-theme-solutions';
@@ -303,7 +303,9 @@ class USI_Theme_Solutions {
    } // add_filters();
 
    function add_shortcodes() {
-      add_shortcode('cloak', array($this, 'shortcode_email'));
+      if (isset(self::$options['support']['post-thumbnails'])) {
+         add_shortcode('feature_image', [$this, 'shortcode_feature_image']);
+      }
    } // add_shortcodes();
 
    function add_support() {
@@ -312,7 +314,6 @@ class USI_Theme_Solutions {
          if (isset($options['menus'])) add_theme_support('menus');
          if (isset($options['post-thumbnails'])) {
             add_theme_support('post-thumbnails');
-            add_shortcode('feature_image', [$this, 'shortcode_feature_image']);
          }
       }
    } // add_support();
@@ -418,30 +419,6 @@ class USI_Theme_Solutions {
    function remove_filters() {
    // remove_filter('wp_robots', 'wp_robots_max_image_preview_large');
    } // remove_filters();
-
-   static function shortcode_email($attributes, $content = null) {
-      $t = explode('-', $attributes['email']);
-      $local = str_replace('__', '-', $t[1]);
-      $domain = str_replace('__', '-', $t[2]);;
-      $tld = $t[3];
-      $subject = $t[4];
-      $font = $t[5];
-      $base = $t[6];
-      $height = $t[7];
-      $padding = $t[8];
-      $size = 0.75 * (float)$t[9];
-      $font_name = "{$_SERVER['DOCUMENT_ROOT']}/$font";
-      $text = $local . '@' . $domain . '.' . $tld;
-      $bound_box = ImageTTFBbox($size, 0, $font_name, $text);
-      $width = $bound_box[4] - $bound_box[0] + 2 * $padding;
-      $html = '<a ' . (!empty($attributes['class']) ? 'class="' . $attributes['class'] . '" ' : '') . 
-         'href="scripts/cloak.php?1-' . "$t[1]-$t[2]-$t[3]-$t[4]-$t[5]-$t[6]-$t[7]-$t[8]-$t[9]" . '" ' .
-         'onmouseout="this.style.backgroundPosition=\'0 0\';" onmouseover="this.style.backgroundPosition=\'-100% 0\';" ' .
-         'style="background:url(scripts/cloak.php?' . $attributes['email'] . '); ' . 'display:inline-block; height:' . 
-         $height . 'px; vertical-align:top; width:' . $width . 'px;" target="null-frame"></a>';
-      return($html);
-   } // shortcode_email();
-
 
    static function shortcode_feature_image($attributes, $content = null) {
       if (!has_post_thumbnail()) return(null);

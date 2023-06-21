@@ -1,6 +1,6 @@
 <?php // ------------------------------------------------------------------------------------------------------------------------ //
 
-/* Version: 1.5.5 (2022-11-01) */ 
+/* Version: 1.5.8 (2023-06-20) */ 
 
 get_template_part('head');
 
@@ -15,8 +15,6 @@ if (!empty(USI_Theme_Solutions::$options['templates'][$template_name])) {
    for ($ith = 1; $ith < count($template_parts); $ith++) get_template_part($template_parts[$ith]);
 
 }
-
-echo '    <iframe id="null-frame" style="border:0; height:1px; visibility:hidden; width:1px;"></iframe>', PHP_EOL, PHP_EOL;
 
 wp_footer();
 
