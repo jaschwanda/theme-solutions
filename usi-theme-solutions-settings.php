@@ -11,7 +11,7 @@ if (!is_dir(WP_PLUGIN_DIR . '/usi-wordpress-solutions')) {
    goto END_OF_FILE;
 } // ENDIF required plugins are not available;
 
-require_once(WP_PLUGIN_DIR . '/usi-wordpress-solutions/usi-wordpress-solutions-settings.php');
+require_once WP_PLUGIN_DIR . '/usi-wordpress-solutions/usi-wordpress-solutions-settings.php';
 
 class USI_Theme_Solutions_Settings extends USI_WordPress_Solutions_Settings {
 

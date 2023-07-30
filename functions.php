@@ -3,6 +3,7 @@
 /* 
 Author:            Jim Schwanda
 Author URI:        https://www.usi2solve.com/leader
+Copyright:         2023 by Jim Schwanda.
 Description:       The Theme-Solutions framework serves as a base for custom theme implementation. The WordPress-Solutions plugin is required for the Theme-Solutions framework to run properly. 
 Donate link:       https://www.usi2solve.com/donate/theme-solutions
 License:           GPL-3.0
@@ -13,26 +14,14 @@ Text Domain:       usi-theme-solutions
 Theme Name:        Theme-Solutions
 Theme URI:         https://www.usi2solve.com/wordpress/theme-solutions
 Version:           1.5.8
-*/
-
-/*
-Theme-Solutions is free software: you can redistribute it and/or modify it under the terms of the GNU General Public 
-License as published by the Free Software Foundation, either version 3 of the License, or any later version.
- 
-Theme-Solutions is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied 
-warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
- 
-You should have received a copy of the GNU General Public License along with Variable-Solutions. If not, see 
-https://github.com/jaschwanda/theme-solutions/blob/master/LICENSE.md
-
-Copyright (c) 2020 by Jim Schwanda.
+Warranty:          This software is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 */
 
 // https://developer.wordpress.org/plugins/internationalization/how-to-internationalize-your-plugin/
 // https://developer.wordpress.org/themes/basics/theme-functions/
 // http://justintadlock.com/archives/2010/11/08/sidebars-in-wordpress
 // http://wordpress.stackexchange.com/questions/26557/programmatically-add-widgets-to-sidebars/51086#51086
-// http://code.tutsplus.com/articles/customizing-your-wordpress-admin--wp-24941
+// https://code.tutsplus.com/customizing-your-wordpress-admin--wp-24941a
 
 class USI_Theme_Solutions {
 
@@ -104,7 +93,7 @@ class USI_Theme_Solutions {
    
    function action_after_setup_theme() {
       if (is_admin()) {
-         require(get_template_directory() . '/usi-theme-solutions-settings.php');
+         require_once get_template_directory() . '/usi-theme-solutions-settings.php';
       } // ENDIF is_admin();
    } // action_after_setup_theme();
 
@@ -172,13 +161,13 @@ class USI_Theme_Solutions {
    function action_widgets_init() {
       if (isset(self::$options['widget_areas'])) {
          $options = self::$options['widget_areas'];
-         $source = array('__', '_', '{i}', '{n}', 'null');
-         $target = array('_', ' ', '', PHP_EOL, '');
+         $source = ['__', '_', '{i}', '{n}', 'null'];
+         $target = ['_', ' ', '', PHP_EOL, ''];
          foreach ($options as $key => $value) {
             $tokens = explode(' ', $value);
             if (!empty($tokens[7])) $target[2] = str_repeat(' ', (int)$tokens[7]);
             register_sidebar(
-               array(
+               [
                   'id'   => !empty($tokens[0]) ? str_replace($source, $target, $tokens[0]) : '',
                   'name' => !empty($tokens[1]) ? str_replace($source, $target, $tokens[1]) : '',
                   'description'   => !empty($tokens[2]) ? str_replace($source, $target, $tokens[2]) : '',
@@ -186,7 +175,7 @@ class USI_Theme_Solutions {
                   'after_widget'  => !empty($tokens[4]) ? str_replace($source, $target, $tokens[4]) : '',
                   'before_title'  => !empty($tokens[5]) ? str_replace($source, $target, $tokens[5]) : '',
                   'after_title'   => !empty($tokens[6]) ? str_replace($source, $target, $tokens[6]) : '',
-               )
+               ]
             );
          }
       }
@@ -217,10 +206,6 @@ class USI_Theme_Solutions {
          if (!empty($error)) usi::log('error_get_last=', $error);
       }
    } // action_wp_footer();
-
-   function action_wp_head_inline_style() {
-      // echo "    <style>\n      /* theme customizer .jim2{color:red;} */\n    </style>\n";
-   } // action_wp_head_inline_style();
 
    function action_wp_head_meta_tags() {
 
@@ -260,27 +245,26 @@ class USI_Theme_Solutions {
 
    function add_actions() {
       if (!empty(self::$options['miscellaneous']['log_plugin_install_errors'])) {
-         add_action('activated_plugin', array($this, 'action_activated_plugin'));
+         add_action('activated_plugin', [$this, 'action_activated_plugin']);
       }
       if (!empty(self::$options['updates']['disable_admin_notice'])) {
-         add_action('admin_head', array($this, 'action_admin_head'), 1);
+         add_action('admin_head', [$this, 'action_admin_head'], 1);
       }
-      add_action('after_setup_theme', array($this, 'action_after_setup_theme'));
-      add_action('widgets_init', array($this, 'action_widgets_init'), 10);
+      add_action('after_setup_theme', [$this, 'action_after_setup_theme']);
+      add_action('widgets_init', [$this, 'action_widgets_init'], 10);
       if (!empty(self::$options['admin']['admin_global_message'])) {
-         add_action('wp_after_admin_bar_render', array($this, 'action_wp_after_admin_bar_render'));
-         add_action('wp_before_admin_bar_render', array($this, 'action_wp_before_admin_bar_render'));
+         add_action('wp_after_admin_bar_render', [$this, 'action_wp_after_admin_bar_render']);
+         add_action('wp_before_admin_bar_render', [$this, 'action_wp_before_admin_bar_render']);
       }
-      add_action('wp_enqueue_scripts', array($this, 'action_wp_enqueue_scripts'), 20);
-      add_action('wp_head', array($this, 'action_wp_head_meta_tags'), 8);
-      add_action('wp_head', array($this, 'action_wp_head_inline_style'), 30);
-      add_action('wp_footer', array($this, 'action_wp_footer'), 20);
+      add_action('wp_enqueue_scripts', [$this, 'action_wp_enqueue_scripts'], 20);
+      add_action('wp_head', [$this, 'action_wp_head_meta_tags'], 8);
+      add_action('wp_footer', [$this, 'action_wp_footer'], 20);
    } // add_actions();
 
    function add_filters() {
 
       add_filter('wp_robots', [$this, 'filter_wp_robots'], 10, 3);
-      $updates = !empty(self::$options['updates']) ? self::$options['updates'] : array();
+      $updates = !empty(self::$options['updates']) ? self::$options['updates'] : [];
       if (!empty($updates['automatic_updater_disabled'])) {
          add_filter('automatic_updater_disabled', '__return_true');
       } else {
@@ -296,9 +280,10 @@ class USI_Theme_Solutions {
          add_filter('auto_update_translation', '__return_' . (!empty($updates['auto_update_translation']) ? 'true' : 'false'));
       }
 
-      add_filter('script_loader_tag', array($this, 'filter_script_loader_tag'), 10, 3);
-      add_filter('site_icon_meta_tags', array($this, 'filter_site_icon_meta_tags'));
-      add_filter('style_loader_tag', array($this, 'filter_style_loader_tag'), 10, 4);
+      if (!is_admin()) add_filter('script_loader_tag', [$this, 'filter_script_loader_tag'], 10, 3);
+
+      add_filter('site_icon_meta_tags', [$this, 'filter_site_icon_meta_tags']);
+      add_filter('style_loader_tag', [$this, 'filter_style_loader_tag'], 10, 4);
 
    } // add_filters();
 
@@ -312,9 +297,7 @@ class USI_Theme_Solutions {
       if (isset(self::$options['support'])) {
          $options = self::$options['support'];
          if (isset($options['menus'])) add_theme_support('menus');
-         if (isset($options['post-thumbnails'])) {
-            add_theme_support('post-thumbnails');
-         }
+         if (isset($options['post-thumbnails'])) add_theme_support('post-thumbnails');
       }
    } // add_support();
 
@@ -332,32 +315,31 @@ class USI_Theme_Solutions {
 
    function filter_wp_robots($robots) {
       self::$robots = $robots;
-      return([]);
+      return [];
    } // filter_wp_robots();
 
    function filter_script_loader_tag($tag, $id, $src) {
       if (self::$trim_urls_source) {
          $src = str_replace(self::$trim_urls_source, self::$trim_urls_target, $src);
       }
-      return('    <script src="' . $src . '"></script>' . PHP_EOL);
+      return '    <script src="' . $src . '"></script>' . PHP_EOL;
    } // filter_script_loader_tag();
 
    function filter_site_icon_meta_tags($meta_tags) {
-//usi::log('$meta_tags=', $meta_tags);
-      if (isset(self::$options['site_icon_meta_tags'])) return([]);
+      if (isset(self::$options['site_icon_meta_tags'])) return [];
       if (self::$trim_urls_source) {
          foreach ($meta_tags as $key => $value) {
             $meta_tags[$key] = '    ' . str_replace(self::$trim_urls_source, self::$trim_urls_target, $value);
          }
       }
-      return($meta_tags);
+      return $meta_tags;
    }
 
    function filter_style_loader_tag($src, $id, $url, $media) {
       if (self::$trim_urls_source) {
          $url = str_replace(self::$trim_urls_source, self::$trim_urls_target, $url);
       }
-      return('    <link href="' . $url . '" ' . (empty($media) ? '' : 'media="' . $media . '" ') . 'rel="stylesheet" />' . PHP_EOL);
+      return '    <link href="' . $url . '" ' . (empty($media) ? '' : 'media="' . $media . '" ') . 'rel="stylesheet" />' . PHP_EOL;
    } // filter_style_loader_tag();
 
    public static function get_menu($menu_name, $indent = 0) {
@@ -369,7 +351,7 @@ class USI_Theme_Solutions {
                ($item->attr_title  ? ' title="' . $item->attr_title  . '"' : '') . '>' . $item->title . '</a>' . PHP_EOL;
          }
       }
-      return($html);
+      return $html;
    } // get_menu();  
 
    public static function loop() {
@@ -403,7 +385,7 @@ class USI_Theme_Solutions {
          if (isset($options['wlwmanifest_link'])) remove_action('wp_head', 'wlwmanifest_link');
          if (isset($options['wp_generator'])) {
             remove_action('wp_head', 'wp_generator');
-            add_filter('the_generator', array($this, 'filter_generator_version'));
+            add_filter('the_generator', [$this, 'filter_generator_version']);
          }
          if (isset($options['wp_oembed_add_discovery_links'])) remove_action('wp_head', 'wp_oembed_add_discovery_links', 10);
          if (isset($options['wp_oembed_add_host_js'])) remove_action('wp_head', 'wp_oembed_add_host_js'); 
@@ -421,13 +403,13 @@ class USI_Theme_Solutions {
    } // remove_filters();
 
    static function shortcode_feature_image($attributes, $content = null) {
-      if (!has_post_thumbnail()) return(null);
-      if (empty($attributes) || ('url' == $attributes[0])) return(get_the_post_thumbnail_url());
+      if (!has_post_thumbnail()) return null;
+      if (empty($attributes) || ('url' == $attributes[0])) return get_the_post_thumbnail_url();
       $id = get_post_thumbnail_id();
       switch ($attributes[0]) {
-      case 'alt': return(get_post_meta($id, '_wp_attachment_image_alt', true));
+      case 'alt': return get_post_meta($id, '_wp_attachment_image_alt', true);
       }
-      return(null);
+      return null;
    } // shortcode_feature_image();
 
 } // Class USI_Theme_Solutions;
@@ -442,36 +424,38 @@ function usi_add_theme_editor_capabilities() {
 add_action('admin_init', 'usi_add_theme_editor_capabilities');
 
 function widget($atts) {
-    
-    global $wp_widget_factory;
-    
-    extract(shortcode_atts(array(
-        'widget_name' => FALSE
-    ), $atts));
-    
-    $widget_name = wp_specialchars($widget_name);
-    
-    if (!is_a($wp_widget_factory->widgets[$widget_name], 'WP_Widget')):
-        $wp_class = 'WP_Widget_'.ucwords(strtolower($class));
-        
-        if (!is_a($wp_widget_factory->widgets[$wp_class], 'WP_Widget')):
-            return '<p>'.sprintf(__("%s: Widget class not found. Make sure this widget exists and the class name is correct"),'<strong>'.$class.'</strong>').'</p>';
-        else:
-            $class = $wp_class;
-        endif;
-    endif;
-    
-    ob_start();
-    the_widget($widget_name, $instance, array('widget_id'=>'arbitrary-instance-'.$id,
-        'before_widget' => '',
-        'after_widget' => '',
-        'before_title' => '',
-        'after_title' => ''
-    ));
-    $output = ob_get_contents();
-    ob_end_clean();
-    return $output;
-    
+
+   global $wp_widget_factory;
+
+   extract(shortcode_atts(['widget_name' => FALSE], $atts));
+
+   $widget_name = wp_specialchars($widget_name);
+
+   if (!is_a($wp_widget_factory->widgets[$widget_name], 'WP_Widget')):
+       $wp_class = 'WP_Widget_'.ucwords(strtolower($class));
+       if (!is_a($wp_widget_factory->widgets[$wp_class], 'WP_Widget')):
+          return '<p>'.sprintf(__("%s: Widget class not found. Make sure this widget exists and the class name is correct"),'<strong>'.$class.'</strong>').'</p>';
+       else:
+          $class = $wp_class;
+       endif;
+   endif;
+
+   ob_start();
+   the_widget(
+      $widget_name, 
+      $instance, 
+      [
+         'widget_id'=>'arbitrary-instance-'.$id,
+         'before_widget' => '',
+         'after_widget' => '',
+         'before_title' => '',
+         'after_title' => ''
+      ]
+   );
+   $output = ob_get_contents();
+   ob_end_clean();
+   return $output;
+
 }
 
 // --------------------------------------------------------------------------------------------------------------------------- // ?>
