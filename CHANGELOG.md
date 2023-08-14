@@ -2,6 +2,9 @@
 
 Theme-Solutions theme framework changes are logged here using <a href="http://semver.org/">Semantic Versioning</a>.
 
+## 1.5.9 (2023-08-13) ##
+* Added wp_body_open() method call.
+
 ## 1.5.8 (2023-06-20) ##
 * Removed cloak e-mail short code and put it in USI WordPress Solutions.
 
