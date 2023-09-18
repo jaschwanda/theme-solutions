@@ -74,7 +74,23 @@ class USI_Theme_Solutions {
       $this->add_support();
       $this->remove_actions();
       $this->remove_filters();
-
+/*
+      add_filter(
+         'site_status_tests', 
+         function (array $tests) {
+            usi::log('$tests=', $tests);
+            unset(
+               $tests['async']['background_updates'],
+               $tests['async']['page_cache'],
+               $tests['direct']['theme_version'],
+               $tests['direct']['caching_plugin']
+            );
+            return $tests;
+         }, 
+         10, 
+         1
+      );
+*/
    } // __construct();
 
    function action_activated_plugin() {
