@@ -2,6 +2,9 @@
 
 Theme-Solutions theme framework changes are logged here using <a href="http://semver.org/">Semantic Versioning</a>.
 
+## 2.0.0 (2024-06-23) ##
+* Modified to utilize the USI WordPress Solutions autoloader and Must Use Plugin structure.
+
 ## 1.5.9 (2023-08-13) ##
 * Added wp_body_open() method call.
 

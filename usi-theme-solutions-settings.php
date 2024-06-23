@@ -2,20 +2,11 @@
 
 defined('ABSPATH') or die('Accesss not allowed.');
 
-// IF required plugins are not available;
-if (!is_dir(WP_PLUGIN_DIR . '/usi-wordpress-solutions')) {
-   add_action('admin_notices', function () {
-      echo '<div class="notice notice-warning is-dismissible"><p>' . 
-         __('The <b>WordPress-Solutions</b> plugin is required for the <b>Theme-Solutions</b> framework to run properly.') . '</p></div>';
-   });
-   goto END_OF_FILE;
-} // ENDIF required plugins are not available;
-
-require_once WP_PLUGIN_DIR . '/usi-wordpress-solutions/usi-wordpress-solutions-settings.php';
+if (!class_exists('USI')) goto END_OF_FILE;
 
 class USI_Theme_Solutions_Settings extends USI_WordPress_Solutions_Settings {
 
-   const VERSION = '1.5.6 (2022-11-22)';
+   const VERSION = '2.0.0 (2024-06-23)';
 
    function __construct() {
 
@@ -71,11 +62,11 @@ class USI_Theme_Solutions_Settings extends USI_WordPress_Solutions_Settings {
    function action_load_help_tab() {
       $screen = get_current_screen();
       $screen->add_help_tab(
-         array(
+         [
            'id' => 'scripts',
            'title' => __('Scripts, Styles, Templates, Trims and Widgetized Areas'),
            'content' => '<p>' . __( 'The <b>Scripts</b>, <b>Styles</b>, <b>Templates</b>, <b>Trims</b> and <b>Widgetized Areas</b> sections use spaces to seperate the input into individual strings. If you need to use a space in a string then you should include an underscore <b>"_"</b> as the space. If you need to use an underscore in a string then you should include a double underscore <b>"__"</b> as the single underscore.' ) . '</p>',
-         ) 
+         ] 
       );
    } // action_load_help_tab();
 
@@ -97,7 +88,7 @@ class USI_Theme_Solutions_Settings extends USI_WordPress_Solutions_Settings {
    function action_widgets_init() {
       if (isset($this->options['wp_head']['recent_comments_style'])) {
          global $wp_widget_factory;
-         remove_action('wp_head', array($wp_widget_factory->widgets['WP_Widget_Recent_Comments'], 'recent_comments_style'));
+         remove_action('wp_head', [$wp_widget_factory->widgets['WP_Widget_Recent_Comments'], 'recent_comments_style']);
       }
       if (isset($this->options['widgets']['Archives'])) unregister_widget('WP_Widget_Archives');
       if (isset($this->options['widgets']['Calendar'])) unregister_widget('WP_Widget_Calendar');
@@ -125,21 +116,21 @@ class USI_Theme_Solutions_Settings extends USI_WordPress_Solutions_Settings {
    function add_filters(){
       if (isset($this->options['admin'])) {
          $options = $this->options['admin'];
-         if (!empty($options['admin_bar_menu'])) add_filter('admin_bar_menu', array($this, 'filter_admin_bar_menu'), 25);
-         if (isset($options['admin_footer_text'])) add_filter('admin_footer_text', array($this, 'filter_admin_footer_text'));
-         if (!empty($options['update_footer'])) add_filter('update_footer', array($this, 'filter_footer_version'), 999);
+         if (!empty($options['admin_bar_menu'])) add_filter('admin_bar_menu', [$this, 'filter_admin_bar_menu'], 25);
+         if (isset($options['admin_footer_text'])) add_filter('admin_footer_text', [$this, 'filter_admin_footer_text']);
+         if (!empty($options['update_footer'])) add_filter('update_footer', [$this, 'filter_footer_version'], 999);
          define('DISALLOW_FILE_EDIT', isset($options['disable-editor']) ? true : false);
-         add_filter('wp_prepare_themes_for_js', array($this, 'filter_themes'));
+         add_filter('wp_prepare_themes_for_js', [$this, 'filter_themes']);
       }
    } // add_filters();
 
    function config_section_footer() {
       submit_button(__('Save Changes', USI_WordPress_Solutions::TEXTDOMAIN), 'primary', 'submit', true); 
-      return(null);
+      return null;
    } // config_section_footer();
 
    function fields_sanitize_section($input, $section_id) {
-      $new_section = array();
+      $new_section = [];
       foreach($input[$section_id] as $key => $value) {
          if (!empty($value)) {
             $value = preg_replace('/\s+/', ' ', $value);
@@ -149,7 +140,7 @@ class USI_Theme_Solutions_Settings extends USI_WordPress_Solutions_Settings {
       }
       unset($new_section['new_' . $section_id]);
       $input[$section_id] = $new_section;
-      return($input);
+      return $input;
    } // fields_sanitize_section();
 
    function fields_sanitize_updates($input) {
@@ -168,19 +159,19 @@ class USI_Theme_Solutions_Settings extends USI_WordPress_Solutions_Settings {
             $input['updates']['allow_dev_auto_core_updates']   = false;
          }
       }
-      return($input);
+      return $input;
    } // fields_sanitize_updates();
 
    function filter_admin_bar_menu($wp_admin_bar) {
       $role = $this->get_user_role();
       $my_account = $wp_admin_bar->get_node('my-account');
-      $greating = str_replace(array('{role}'), array(ucfirst($role)), $this->options['admin']['admin_bar_menu']);
+      $greating = str_replace(['{role}'], [ucfirst($role)], $this->options['admin']['admin_bar_menu']);
       $new_title = str_replace('Howdy,', $greating, $my_account->title);           
       $wp_admin_bar->add_node(
-         array(
+         [
             'id' => 'my-account',
             'title' => $new_title,
-         )
+         ]
       );
    } // filter_admin_bar_menu();
 
@@ -190,21 +181,21 @@ class USI_Theme_Solutions_Settings extends USI_WordPress_Solutions_Settings {
    } // filter_admin_footer_text();
 
    function filter_footer_version() {
-      return($this->options['admin']['update_footer']);
+      return $this->options['admin']['update_footer'];
    } // filter_footer_version();
 
    function filter_generator_version() {
-      return('');
+      return '';
    } // filter_generator_version();
    
    function filter_themes($themes) {
       unset($themes['usi-theme-solutions']);
-      return($themes);
+      return $themes;
    } // filter_themes();
 
    function get_user_role() {
       global $current_user;
-      return(!empty($current_user->roles[0]) ? $current_user->roles[0] : 'unknown');
+      return !empty($current_user->roles[0]) ? $current_user->roles[0] : 'unknown';
    } // get_user_role();
 
    function remove_filters(){
@@ -247,9 +238,9 @@ class USI_Theme_Solutions_Settings extends USI_WordPress_Solutions_Settings {
 
    function sections() {
 
-      $fields_sanitize_section = array($this, 'fields_sanitize_section');
+      $fields_sanitize_section = [$this, 'fields_sanitize_section'];
 
-      $wp_header = array(
+      $wp_header = [
          'adjacent_posts_rel_link',
          'adjacent_posts_rel_link_wp_head',  // 10,0;
          'classic-theme-styles',
@@ -276,14 +267,14 @@ class USI_Theme_Solutions_Settings extends USI_WordPress_Solutions_Settings {
          'wp_resource_hints',                // 2;
          'wp_shortlink_wp_head',             // 10,0;
          'wp_site_icon',                     // 99;
-      );
-      $wp_header_settings = array();
+      ];
+      $wp_header_settings = [];
       for ($ith = 0; $ith < count($wp_header); $ith++) {
          $id = $wp_header[$ith];   
-         $wp_header_settings[$id] = array('type' => 'checkbox', 'label' => $id);
+         $wp_header_settings[$id] = ['type' => 'checkbox', 'label' => $id];
       }
 
-      $widgets = array(
+      $widgets = [
          'Archives',
          'Calendar',
          'Categories',
@@ -297,27 +288,27 @@ class USI_Theme_Solutions_Settings extends USI_WordPress_Solutions_Settings {
          'Tag Cloud',
          'Text',
          'Menu Widget',
-      );
-      $widgets_settings = array();
+      ];
+      $widgets_settings = [];
       for ($ith = 0; $ith < count($widgets); $ith++) {
          $id = $widgets[$ith];   
-         $widgets_settings[$id] = array('type' => 'checkbox', 'label' => $id);
+         $widgets_settings[$id] = ['type' => 'checkbox', 'label' => $id];
       }
 
-      $scripts = isset($this->options['scripts']) ? $this->options['scripts'] : array();
+      $scripts = isset($this->options['scripts']) ? $this->options['scripts'] : [];
       $scripts['new_scripts'] = 'new_scripts';
-      $scripts_settings = array();
+      $scripts_settings = [];
       foreach ($scripts as $script_value) {
          $tokens = explode(' ', $script_value);
          $id     = $tokens[0];
-         $scripts_settings[$id] = array('f-class' => 'large-text', 'type' => 'text', 'label' => $id);
+         $scripts_settings[$id] = ['f-class' => 'large-text', 'type' => 'text', 'label' => $id];
          if ('new_scripts' == $id) {
             $scripts_settings[$id]['label'] = __('Add Script', USI_Theme_Solutions::TEXTDOMAIN);
             $scripts_settings[$id]['notes'] = '<i>unique-id &nbsp; script/path/name &nbsp; version &nbsp; footer</i>';
          }
       }
 
-      $social_media = array(
+      $social_media = [
          'facebook' => 'Facebook',
          'flickr' => 'Flickr',
          'googleplus' => 'Google+',
@@ -326,63 +317,63 @@ class USI_Theme_Solutions_Settings extends USI_WordPress_Solutions_Settings {
          'pinterest' => 'Pinterest',
          'twitter' => 'Twitter',
          'youtube' => 'YouTube',
-      );
-      $social_media_settings = array();
+      ];
+      $social_media_settings = [];
       foreach ($social_media as $media_id => $media_title) {
-         $social_media_settings[$media_id] = array('f-class' => 'large-text', 'type' => 'text', 'label' => $media_title);
+         $social_media_settings[$media_id] = ['f-class' => 'large-text', 'type' => 'text', 'label' => $media_title];
       }
 
-      $styles = isset($this->options['styles']) ? $this->options['styles'] : array();
+      $styles = isset($this->options['styles']) ? $this->options['styles'] : [];
       $styles['new_styles'] = 'new_styles';
-      $styles_settings = array();
+      $styles_settings = [];
       foreach ($styles as $style_value) {
          $tokens = explode(' ', $style_value);
          $id     = $tokens[0];
-         $styles_settings[$id] = array('f-class' => 'large-text', 'type' => 'text', 'label' => $id);
+         $styles_settings[$id] = ['f-class' => 'large-text', 'type' => 'text', 'label' => $id];
          if ('new_styles' == $id) {
             $styles_settings[$id]['label'] = __('Add Style', USI_Theme_Solutions::TEXTDOMAIN);
             $styles_settings[$id]['notes'] = '<i>unique-id &nbsp; style/path/name &nbsp; version &nbsp; media</i>';
          }
       }
 
-      $templates = isset($this->options['templates']) ? $this->options['templates'] : array();
+      $templates = isset($this->options['templates']) ? $this->options['templates'] : [];
       $templates['new_templates'] = 'new_templates';
-      $templates_settings = array();
+      $templates_settings = [];
       foreach ($templates as $template_value) {
          $tokens = explode(' ', $template_value);
          $id     = $tokens[0];
-         $templates_settings[$id] = array('f-class' => 'large-text', 'type' => 'text', 'label' => $id);
+         $templates_settings[$id] = ['f-class' => 'large-text', 'type' => 'text', 'label' => $id];
          if ('new_templates' == $id) {
             $templates_settings[$id]['label'] = __('Add Template', USI_Theme_Solutions::TEXTDOMAIN);
             $templates_settings[$id]['notes'] = '<i>unique-id &nbsp; first-part &nbsp; second-part &nbsp; . . . &nbsp; nth-part</i>';
          }
       }
 
-      $support = array(
+      $support = [
          'menus',
          'post-thumbnails',
-      );
-      $support_settings = array();
+      ];
+      $support_settings = [];
       for ($ith = 0; $ith < count($support); $ith++) {
          $id = $support[$ith];   
-         $support_settings[$id] = array('type' => 'checkbox', 'label' => $id);
+         $support_settings[$id] = ['type' => 'checkbox', 'label' => $id];
       }
 
-      $trim_urls = isset($this->options['trim_urls']) ? $this->options['trim_urls'] : array();
+      $trim_urls = isset($this->options['trim_urls']) ? $this->options['trim_urls'] : [];
       $trim_urls['new_trim_urls'] = 'new_trim_urls';
-      $trim_urls_settings = array();
+      $trim_urls_settings = [];
       foreach ($trim_urls as $trim_url_value) {
          $tokens = explode(' ', $trim_url_value);
          $id     = $tokens[0];
-         $trim_urls_settings[$id] = array('f-class' => 'large-text', 'type' => 'text', 'label' => $id);
+         $trim_urls_settings[$id] = ['f-class' => 'large-text', 'type' => 'text', 'label' => $id];
          if ('new_trim_urls' == $id) {
             $trim_urls_settings[$id]['label'] = __('Add URL trim', USI_Theme_Solutions::TEXTDOMAIN);
             $trim_urls_settings[$id]['notes'] = '<i>unique-id &nbsp; long/url &nbsp; short/url</i>';
          }
       }
 
-      $options  = !empty($this->options['updates']) ? $this->options['updates'] : array();
-      $notes = array(
+      $options  = !empty($this->options['updates']) ? $this->options['updates'] : [];
+      $notes = [
          'automatic_updater_disabled' => null,
          'auto_update_core' => null,
          'allow_dev_auto_core_updates' => null,
@@ -392,8 +383,8 @@ class USI_Theme_Solutions_Settings extends USI_WordPress_Solutions_Settings {
          'auto_update_theme' => ' &nbsp; ' . __('Applies only to themes that support automatic updates', USI_Theme_Solutions::TEXTDOMAIN),
          'auto_update_translation' => ' &nbsp; ' . __('WordPress Default', USI_Theme_Solutions::TEXTDOMAIN),
          'disable_admin_notice' => null,
-      );
-      $readonly = array(
+      ];
+      $readonly = [
          'automatic_updater_disabled' => false,
          'auto_update_core' => true,
          'allow_dev_auto_core_updates' => true,
@@ -403,7 +394,7 @@ class USI_Theme_Solutions_Settings extends USI_WordPress_Solutions_Settings {
          'auto_update_theme' => true,
          'auto_update_translation' => true,
          'disable_admin_notice' => false,
-      );
+      ];
       if (empty($options['automatic_updater_disabled'])) {
          $readonly['auto_update_core']   =
          $readonly['auto_update_plugin'] =
@@ -415,7 +406,7 @@ class USI_Theme_Solutions_Settings extends USI_WordPress_Solutions_Settings {
             $readonly['allow_dev_auto_core_updates']   = false;
          }
       }
-      $updates = array(
+      $updates = [
          'automatic_updater_disabled' => __('Disable All Updates', USI_Theme_Solutions::TEXTDOMAIN),
          'auto_update_core' => __('Enable All Core Updates', USI_Theme_Solutions::TEXTDOMAIN),
          'allow_dev_auto_core_updates' => __('Enable Development Updates', USI_Theme_Solutions::TEXTDOMAIN),
@@ -425,8 +416,8 @@ class USI_Theme_Solutions_Settings extends USI_WordPress_Solutions_Settings {
          'auto_update_theme' => __('Enable Theme Updates', USI_Theme_Solutions::TEXTDOMAIN),
          'auto_update_translation' => __('Enable Translation Updates', USI_Theme_Solutions::TEXTDOMAIN),
          'disable_admin_notice' => __('Disable Non-Admin Notices', USI_Theme_Solutions::TEXTDOMAIN),
-      );
-      $updates_settings = array();
+      ];
+      $updates_settings = [];
       $indent = '<span style="display:inline-block; width:16px;"></span>';
       $index  = 0;
       foreach ($updates as $update_id => $update_label) {
@@ -437,22 +428,22 @@ class USI_Theme_Solutions_Settings extends USI_WordPress_Solutions_Settings {
          case 5: $prefix = $indent; break;
          case 2: $prefix = $indent . $indent; break;
          }
-         $updates_settings[$update_id] = array(
+         $updates_settings[$update_id] = [
             'type' => 'checkbox', 
             'label' => $update_label, 
             'notes' => $notes[$update_id], 
             'prefix' => $prefix, 
             'readonly' => $readonly[$update_id],
-         );
+         ];
       }
 
-      $versions_settings = array(
-         'version-wordpress' => array(
+      $versions_settings = [
+         'version-wordpress' => [
             'type' => 'html', 
             'label' => 'WordPress',
             'html' =>  get_bloginfo('version'),
-         ), // version-wordpress;
-         'version-parent' => array(
+         ], // version-wordpress;
+         'version-parent' => [
             'type' => 'html', 
             'label' => USI_Theme_Solutions::NAME,
             'html' => USI_WordPress_Solutions_Versions::link(
@@ -462,11 +453,11 @@ class USI_Theme_Solutions_Settings extends USI_WordPress_Solutions_Settings {
                USI_Theme_Solutions::TEXTDOMAIN, 
                __DIR__ // Folder containing plugin or theme;
             ),
-         ), // version-parent;
-      );
+         ], // version-parent;
+      ];
       $theme = wp_get_theme();
       if (USI_Theme_Solutions::NAME != $theme->Name) {
-         $versions_settings['version-child'] = array(
+         $versions_settings['version-child'] = [
             'type' => 'html', 
             'label' => $theme->Name,
             'html' => USI_WordPress_Solutions_Versions::link(
@@ -476,63 +467,63 @@ class USI_Theme_Solutions_Settings extends USI_WordPress_Solutions_Settings {
                USI_Theme_Solutions::TEXTDOMAIN, 
                get_stylesheet_directory() // Folder containing plugin or theme;
             ),
-         );
+         ];
       }
 
-      $widget_areas = isset($this->options['widget_areas']) ? $this->options['widget_areas'] : array();
+      $widget_areas = isset($this->options['widget_areas']) ? $this->options['widget_areas'] : [];
       $widget_areas['new_widget_areas'] = 'new_widget_areas';
-      $widget_areas_settings = array();
+      $widget_areas_settings = [];
       foreach ($widget_areas as $widget_area_value) {
          $tokens = explode(' ', $widget_area_value);
          $id     = $tokens[0];
-         $widget_areas_settings[$id] = array('f-class' => 'large-text', 'type' => 'text', 'label' => $id);
+         $widget_areas_settings[$id] = ['f-class' => 'large-text', 'type' => 'text', 'label' => $id];
          if ('new_widget_areas' == $id) {
             $widget_areas_settings[$id]['label'] = __('Add Widgetized Area', USI_Theme_Solutions::TEXTDOMAIN);
             $widget_areas_settings[$id]['notes'] = '<i>unique-id &nbsp; name &nbsp; description &nbsp; before_widget_html &nbsp; after_widget_html &nbsp; before_title_html &nbsp; after_title_html</i>';
          }
       }
 
-      $sections = array(
+      $sections = [
 
-         'admin' => array(
+         'admin' => [
             'label' => __('Administrator Pages', USI_Theme_Solutions::TEXTDOMAIN),
-            'settings' => array(
-               'admin_bar_menu' => array(
+            'settings' => [
+               'admin_bar_menu' => [
                   'f-class' => 'large-text', 
                   'type' => 'text', 
                   'label' => 'admin_bar_menu',
-               ),
-               'admin_footer_text' => array(
+               ],
+               'admin_footer_text' => [
                   'f-class' => 'large-text', 
                   'type' => 'text', 
                   'label' => 'admin_footer_text',
-               ),
-               'update_footer' => array(
+               ],
+               'update_footer' => [
                   'f-class' => 'large-text', 
                   'type' => 'text', 
                   'label' => 'update_footer',
-               ),
-               'admin_global_message' => array(
+               ],
+               'admin_global_message' => [
                   'f-class' => 'large-text usi-theme-solutions-mono-font', 
                   'rows' => 2,
                   'type' => 'textarea', 
                   'label' => 'global_message',
                   'notes' => 'height <|> style <|> message.',
-               ),
-               'admin_maintanence_message' => array(
+               ],
+               'admin_maintanence_message' => [
                   'f-class' => 'large-text usi-theme-solutions-mono-font', 
                   'rows' => 2,
                   'type' => 'textarea', 
                   'label' => 'maintenance_message',
                   'notes' => '&lt;h1&gt;' . get_bloginfo('name') . '&lt;/h1&gt;&lt;br/&gt;Is down for maintenance, it should be up at?<br/>Note - administrators can still sign in if they go to the wp-login.php page.',
-               ),
-               'disable-editor' => array(
+               ],
+               'disable-editor' => [
                   'type' => 'checkbox', 
                   'label' => __('Disable File Editor', USI_Theme_Solutions::TEXTDOMAIN),
                   'notes' => 'Disables the plugin and theme code editor (recommended).',
-               ),
-            ),
-         ), // admin;
+               ],
+            ],
+         ], // admin;
 
          'editor' => [
             'label' => __('Editor Functions', USI_Theme_Solutions::TEXTDOMAIN),
@@ -552,205 +543,205 @@ class USI_Theme_Solutions_Settings extends USI_WordPress_Solutions_Settings {
             ],
          ], // editor;
 
-         'header' => array(
+         'header' => [
             'label' => __('Header Functions', USI_Theme_Solutions::TEXTDOMAIN),
-            'settings' => array(
-               'base_url' => array(
+            'settings' => [
+               'base_url' => [
                   'type' => 'checkbox', 
                   'label' => 'Base URL',
-               ),
-               'favicon' => array(
+               ],
+               'favicon' => [
                   'f-class' => 'large-text', 
                   'type' => 'text', 
                   'label' => 'favicon',
-               ),
-            ),
-         ), // header;
+               ],
+            ],
+         ], // header;
 
-         'jquery' => array(
-            'footer_callback' => array($this, 'config_section_footer'),
+         'jquery' => [
+            'footer_callback' => [$this, 'config_section_footer'],
             'label' => __('jQuery Libraries', USI_Theme_Solutions::TEXTDOMAIN),
-            'settings' => array(
-               'load' => array(
+            'settings' => [
+               'load' => [
                   'type' => 'radio', 
                   'label' => 'Load',
-                  'choices' => array(
-                     array(
+                  'choices' => [
+                     [
                         'value' => 'none', 
                         'label' => true, 
                         'notes' => __('Do Not Load', USI_Theme_Solutions::TEXTDOMAIN), 
                         'suffix' => ' &nbsp; &nbsp; &nbsp; ',
-                     ),
-                     array(
+                     ],
+                     [
                         'value' => 'header', 
                         'label' => true, 
                         'notes' => __('In Header', USI_Theme_Solutions::TEXTDOMAIN), 
                         'suffix' => ' &nbsp; &nbsp; &nbsp; ',
-                     ),
-                     array(
+                     ],
+                     [
                         'value' => 'footer', 
                         'label' => true, 
                         'notes' => __('In Footer', USI_Theme_Solutions::TEXTDOMAIN), 
-                     ),
-                  ),
-               ), // load;
-               'source' => array(
+                     ],
+                  ],
+               ], // load;
+               'source' => [
                   'type' => 'radio', 
                   'label' => __('Source', USI_Theme_Solutions::TEXTDOMAIN),
-                  'choices' => array(
-                     array(
+                  'choices' => [
+                     [
                         'value' => 'google', 
                         'label' => true, 
                         'notes' => __('Google', USI_Theme_Solutions::TEXTDOMAIN), 
                         'suffix' => ' &nbsp; &nbsp; &nbsp; ',
-                     ),
-                     array(
+                     ],
+                     [
                         'value' => 'wordpress', 
                         'label' => true, 
                         'notes' => __('WordPress', USI_Theme_Solutions::TEXTDOMAIN), 
-                     ),
-                  ),
-               ), // source;
-               'version' => array(
+                     ],
+                  ],
+               ], // source;
+               'version' => [
                   'f-class' => 'large-text', 
                   'type' => 'text', 
                   'label' => 'Version',
                   'notes' => 'dummy',
-               ),
-            ),
-         ), // jquery;
+               ],
+            ],
+         ], // jquery;
 
-         'meta_tags' => array(
+         'meta_tags' => [
             'label' => __('Administrator Pages', USI_Theme_Solutions::TEXTDOMAIN),
-            'settings' => array(
-               'copyright' => array(
+            'settings' => [
+               'copyright' => [
                   'f-class' => 'large-text', 
                   'type' => 'text', 
                   'label' => 'copyright',
-               ),
-               'description' => array(
+               ],
+               'description' => [
                   'f-class' => 'large-text', 
                   'type' => 'text', 
                   'label' => 'description',
-               ),
-               'format-detection' => array(
+               ],
+               'format-detection' => [
                   'f-class' => 'large-text', 
                   'type' => 'text', 
                   'label' => 'format-detection',
-               ),
-               'viewport' => array(
+               ],
+               'viewport' => [
                   'f-class' => 'large-text', 
                   'type' => 'text', 
                   'label' => 'viewport',
-               ),
-            ),
-         ), // meta_tags;
+               ],
+            ],
+         ], // meta_tags;
 
-         'miscellaneous' => array(
+         'miscellaneous' => [
             'label' => __('Miscellaneous', USI_Theme_Solutions::TEXTDOMAIN),
-            'settings' => array(
-               'log_plugin_install_errors' => array(
+            'settings' => [
+               'log_plugin_install_errors' => [
                   'type' => 'checkbox', 
                   'label' => 'log_plugin_install_errors',
                   'notes' => 'Only recommended when installing or testing new plugins. &nbsp; <b>Note:</b> The plugin generated n characters of unexpected output error is often caused when the\'re extra characters before or after the </i>&lt;?php ?&gt;<i> tags or if the .php file is not saved as UTF without BOM.',
-               ),
-               'log_error_get_last' => array(
+               ],
+               'log_error_get_last' => [
                   'type' => 'checkbox', 
                   'label' => 'log_error_get_last',
                   'notes' => 'Only recommended when doing debugging, calls the error_get_last() method and processes results via usi::log() method.',
-               ),
-            ),
-         ), // miscellaneous;
+               ],
+            ],
+         ], // miscellaneous;
 
-         'wp_head' => array(
+         'wp_head' => [
             'label' => __('Remove wp_head() Items', USI_Theme_Solutions::TEXTDOMAIN),
             'settings' => $wp_header_settings,
-         ), // wp_head;
+         ], // wp_head;
 
-         'widgets' => array(
+         'widgets' => [
             'label' => __('Remove Unused Default Widgets', USI_Theme_Solutions::TEXTDOMAIN),
             'settings' => $widgets_settings,
-         ), // widgets;
+         ], // widgets;
 
-         'scripts' => array(
+         'scripts' => [
             'fields_sanitize' => $fields_sanitize_section,
             'label' => 'Scripts',
             'settings' => $scripts_settings,
-         ), // scripts;
+         ], // scripts;
 
-         'search' => array(
+         'search' => [
             'label' => __('Search Engine Tools', USI_Theme_Solutions::TEXTDOMAIN),
-            'settings' => array(
-               'google_analytics' => array(
+            'settings' => [
+               'google_analytics' => [
                   'f-class' => 'large-text usi-theme-solutions-mono-font', 
                   'rows' => 4,
                   'type' => 'textarea', 
                   'label' => 'Google Analytics',
-               ),
-               'google_analytics_head' => array(
+               ],
+               'google_analytics_head' => [
                   'type' => 'checkbox', 
                   'label' => __('Analytics in header', USI_Theme_Solutions::TEXTDOMAIN),
                   'notes' => 'If checked code goes in the &lt;head&gt;&lt;/head&gt; tags, otherwise it goes at the bottom of the page.',
-               ),
-               'google_analytics_admin' => array(
+               ],
+               'google_analytics_admin' => [
                   'type' => 'checkbox', 
                   'label' => __('Analytics in admin', USI_Theme_Solutions::TEXTDOMAIN),
                   'notes' => 'If checked code goes in all pages including administratative pages.',
-               ),
-               'page_title_suffix' => array(
+               ],
+               'page_title_suffix' => [
                   'f-class' => 'large-text', 
                   'type' => 'text', 
                   'label' => 'Page Title Suffix',
-               ),
-            ),
-         ), // search;
+               ],
+            ],
+         ], // search;
 
-         'social' => array(
+         'social' => [
             'label' => __('Social Media Links', USI_Theme_Solutions::TEXTDOMAIN),
             'settings' => $social_media_settings,
-         ), // social;
+         ], // social;
 
-         'styles' => array(
+         'styles' => [
             'fields_sanitize' => $fields_sanitize_section,
             'label' => __('Styles', USI_Theme_Solutions::TEXTDOMAIN),
             'settings' => $styles_settings,
-         ), // widgets;
+         ], // widgets;
 
-         'templates' => array(
+         'templates' => [
             'fields_sanitize' => $fields_sanitize_section,
             'label' => __('Templates', USI_Theme_Solutions::TEXTDOMAIN),
             'settings' => $templates_settings,
-         ), // widgets;
+         ], // widgets;
 
-         'support' => array(
+         'support' => [
             'label' => __('Theme Support', USI_Theme_Solutions::TEXTDOMAIN),
             'settings' => $support_settings,
-         ), // support;
+         ], // support;
 
-         'trim_urls' => array(
+         'trim_urls' => [
             'fields_sanitize' => $fields_sanitize_section,
             'label' => __('Trim URLs', USI_Theme_Solutions::TEXTDOMAIN),
             'settings' => $trim_urls_settings,
-         ), // trim_urls;
+         ], // trim_urls;
 
-         'updates' => array(
-            'fields_sanitize' => array($this, 'fields_sanitize_updates'),
+         'updates' => [
+            'fields_sanitize' => [$this, 'fields_sanitize_updates'],
             'label' => __('Update Options', USI_Theme_Solutions::TEXTDOMAIN),
             'settings' => $updates_settings,
-         ), // updates;
+         ], // updates;
 
-         'versions' => array(
+         'versions' => [
             'label' => __('Versions', USI_Theme_Solutions::TEXTDOMAIN),
             'settings' => $versions_settings,
-         ), // versions;
+         ], // versions;
 
-         'widget_areas' => array(
+         'widget_areas' => [
             'fields_sanitize' => $fields_sanitize_section,
             'label' => __('Widgetized Areas', USI_Theme_Solutions::TEXTDOMAIN),
             'settings' => $widget_areas_settings,
-         ), // widget_areas;
+         ], // widget_areas;
 
-      );
+      ];
 
       foreach ($sections as $name => & $section) {
          foreach ($section['settings'] as $name => & $setting) {
@@ -760,7 +751,7 @@ class USI_Theme_Solutions_Settings extends USI_WordPress_Solutions_Settings {
       }
       unset($setting);
 
-      return($sections);
+      return $sections;
 
    } // sections();
 

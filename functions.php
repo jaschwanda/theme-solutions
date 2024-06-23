@@ -7,25 +7,16 @@ Copyright:         2023 by Jim Schwanda.
 Description:       The Theme-Solutions framework serves as a base for custom theme implementation. The WordPress-Solutions plugin is required for the Theme-Solutions framework to run properly. 
 Donate link:       https://www.usi2solve.com/donate/theme-solutions
 License:           GPL-3.0
-License URI:       https://github.com/jaschwanda/variable-solutions/blob/master/LICENSE.md
-Requires PHP:      5.6.25
-Tested up to:      5.3.2
+License URI:       https://github.com/jaschwanda/theme-solutions/blob/master/LICENSE.md
 Text Domain:       usi-theme-solutions
 Theme Name:        Theme-Solutions
-Theme URI:         https://www.usi2solve.com/wordpress/theme-solutions
-Version:           1.5.8
+Version:           2.0.0
 Warranty:          This software is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 */
 
-// https://developer.wordpress.org/plugins/internationalization/how-to-internationalize-your-plugin/
-// https://developer.wordpress.org/themes/basics/theme-functions/
-// http://justintadlock.com/archives/2010/11/08/sidebars-in-wordpress
-// http://wordpress.stackexchange.com/questions/26557/programmatically-add-widgets-to-sidebars/51086#51086
-// https://code.tutsplus.com/customizing-your-wordpress-admin--wp-24941a
-
 class USI_Theme_Solutions {
 
-   const VERSION    = '1.5.8 (2023-06-20)';
+   const VERSION    = '2.0.0 (2024-06-23)';
    const NAME       = 'Theme-Solutions';
    const PREFIX     = 'usi-theme';
    const TEXTDOMAIN = 'usi-theme-solutions';
